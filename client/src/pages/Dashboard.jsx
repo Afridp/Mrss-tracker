@@ -3,15 +3,15 @@ import { getMeals, updateMeal, bulkUpdateMeals } from '../api'
 import { useProfile } from '../ProfileContext'
 
 const MEAL_LABELS = { breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner' }
-const MEAL_ICONS  = { breakfast: '☀️', lunch: '🌤️', dinner: '🌙' }
+const MEAL_ICONS  = { breakfast: '☀', lunch: '◐', dinner: '☾' }
 const MEAL_PRICES = { breakfast: 30, lunch: 60, dinner: 30 }
 
 const STATUS_CYCLE = { pending: 'delivered', delivered: 'skipped', skipped: 'pending' }
 
 const STATUS_STYLE = {
   pending:   'bg-white text-notion-subtle border-notion-border hover:bg-notion-hover',
-  delivered: 'bg-notion-greenBg text-notion-green border-transparent',
-  skipped:   'bg-notion-redBg text-notion-red border-transparent'
+  delivered: 'bg-notion-text text-white border-notion-text',
+  skipped:   'bg-notion-hover text-notion-light border-notion-border line-through'
 }
 
 function toDateStr(date) {
@@ -127,7 +127,7 @@ export default function Dashboard() {
       {!isToday && (
         <button
           onClick={() => setDateStr(toDateStr(new Date()))}
-          className="w-full mb-4 py-1.5 text-sm text-notion-blue hover:bg-notion-blueBg rounded-md font-medium"
+          className="w-full mb-4 py-1.5 text-sm text-notion-text hover:bg-notion-hover rounded-md font-medium border border-notion-border bg-white"
         >
           Jump to today
         </button>
@@ -177,7 +177,7 @@ export default function Dashboard() {
         <div className="text-center py-12 text-notion-light text-sm">Loading...</div>
       ) : people.length === 0 ? (
         <div className="text-center py-16 border border-dashed border-notion-border rounded-md bg-white">
-          <div className="text-3xl mb-2">👥</div>
+          <div className="text-3xl mb-2">·</div>
           <div className="text-notion-text font-medium">No people added yet</div>
           <div className="text-sm text-notion-subtle mt-1">Head to the People tab to add roommates.</div>
         </div>
@@ -186,7 +186,7 @@ export default function Dashboard() {
           <div className="text-notion-text">Your profile wasn't found.</div>
           <button
             onClick={() => setViewMode('all')}
-            className="mt-2 text-sm text-notion-blue font-medium hover:underline"
+            className="mt-2 text-sm text-notion-text font-medium underline"
           >
             Show everyone
           </button>
@@ -204,12 +204,12 @@ export default function Dashboard() {
               <div key={person.id} className="hover:bg-notion-bgSoft">
                 <div className="flex items-center justify-between px-3 py-2.5">
                   <div className="flex items-center gap-2 min-w-0">
-                    <div className="w-7 h-7 rounded-full bg-notion-orangeBg text-notion-orange flex items-center justify-center chip shrink-0">
+                    <div className="w-7 h-7 rounded-full bg-notion-hover text-notion-text flex items-center justify-center chip shrink-0 border border-notion-border">
                       {person.name.charAt(0).toUpperCase()}
                     </div>
                     <span className="font-medium text-notion-text truncate">{person.name}</span>
                     {isMe && (
-                      <span className="chip px-1.5 py-0.5 bg-notion-blueBg text-notion-blue rounded">
+                      <span className="chip px-1.5 py-0.5 bg-notion-text text-white rounded">
                         You
                       </span>
                     )}
@@ -221,7 +221,7 @@ export default function Dashboard() {
                     {!allDone && !isFuture && (
                       <button
                         onClick={() => markAllDelivered(person.id)}
-                        className="text-[11px] font-medium px-2 py-1 text-notion-subtle hover:text-notion-green hover:bg-notion-greenBg rounded"
+                        className="text-[11px] font-medium px-2 py-1 text-notion-subtle hover:text-notion-text hover:bg-notion-hover rounded"
                       >
                         All done
                       </button>
@@ -237,7 +237,7 @@ export default function Dashboard() {
                         onClick={() => toggleMeal(person.id, meal, status)}
                         className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-md border text-sm font-medium ${STATUS_STYLE[status]}`}
                       >
-                        <span>{MEAL_ICONS[meal]}</span>
+                        <span className="opacity-70">{MEAL_ICONS[meal]}</span>
                         <span className="text-xs">{MEAL_LABELS[meal]}</span>
                         <span className="chip opacity-80">· {status}</span>
                       </button>

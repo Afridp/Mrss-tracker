@@ -3,7 +3,7 @@ import { getBilling } from '../api'
 import { useProfile } from '../ProfileContext'
 
 const MEAL_PRICES = { breakfast: 30, lunch: 60, dinner: 30 }
-const MEAL_ICONS  = { breakfast: '☀️', lunch: '🌤️', dinner: '🌙' }
+const MEAL_ICONS  = { breakfast: '☀', lunch: '◐', dinner: '☾' }
 
 function toMonthStr(date) {
   const y = date.getFullYear()
@@ -68,7 +68,7 @@ export default function Billing() {
       {month !== currentMonth && (
         <button
           onClick={() => setMonth(currentMonth)}
-          className="w-full mb-4 py-1.5 text-sm text-notion-blue hover:bg-notion-blueBg rounded-md font-medium"
+          className="w-full mb-4 py-1.5 text-sm text-notion-text hover:bg-notion-hover rounded-md font-medium border border-notion-border bg-white"
         >
           Jump to current month
         </button>
@@ -76,11 +76,11 @@ export default function Billing() {
 
       {/* Your bill callout */}
       {!loading && myRow && (
-        <div className="mb-5 bg-notion-blueBg/50 border border-notion-blueBg rounded-md px-4 py-3">
-          <div className="label-mono text-notion-blue">Your bill</div>
+        <div className="mb-5 bg-notion-text rounded-md px-4 py-3 text-white">
+          <div className="label-mono" style={{ color: 'rgba(255,255,255,0.6)' }}>Your bill</div>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="stat-value text-2xl text-notion-text">₹{myRow.total}</span>
-            <span className="text-sm text-notion-subtle">
+            <span className="stat-value text-2xl">₹{myRow.total}</span>
+            <span className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
               · <span className="stat-value">{Object.values(myRow.counts).reduce((a, b) => a + b, 0)}</span> meals
             </span>
           </div>
@@ -105,7 +105,7 @@ export default function Billing() {
         <div className="text-center py-12 text-notion-light text-sm">Loading...</div>
       ) : data.length === 0 ? (
         <div className="text-center py-16 border border-dashed border-notion-border rounded-md bg-white">
-          <div className="text-3xl mb-2">📋</div>
+          <div className="text-3xl mb-2">·</div>
           <div className="text-notion-text font-medium">No data for this month</div>
         </div>
       ) : (
@@ -118,12 +118,12 @@ export default function Billing() {
                 <div key={person.id} className="hover:bg-notion-bgSoft">
                   <div className="flex items-center justify-between px-3 py-2.5">
                     <div className="flex items-center gap-2 min-w-0">
-                      <div className="w-7 h-7 rounded-full bg-notion-orangeBg text-notion-orange flex items-center justify-center chip shrink-0">
+                      <div className="w-7 h-7 rounded-full bg-notion-hover text-notion-text flex items-center justify-center chip shrink-0 border border-notion-border">
                         {person.name.charAt(0).toUpperCase()}
                       </div>
                       <span className="font-medium text-notion-text truncate">{person.name}</span>
                       {isMe && (
-                        <span className="chip px-1.5 py-0.5 bg-notion-blueBg text-notion-blue rounded">
+                        <span className="chip px-1.5 py-0.5 bg-notion-text text-white rounded">
                           You
                         </span>
                       )}

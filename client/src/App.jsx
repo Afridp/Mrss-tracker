@@ -29,7 +29,7 @@ function Navbar() {
             title="Switch profile"
             className="flex items-center gap-2 px-2 py-1 hover:bg-notion-hover rounded-md"
           >
-            <div className="w-6 h-6 rounded-full bg-notion-blueBg text-notion-blue flex items-center justify-center chip">
+            <div className="w-6 h-6 rounded-full bg-notion-hover text-notion-text border border-notion-border flex items-center justify-center chip">
               {profile.name.charAt(0).toUpperCase()}
             </div>
             <span className="text-sm font-medium text-notion-text">{profile.name}</span>

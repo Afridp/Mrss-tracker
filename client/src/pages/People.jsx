@@ -2,11 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { getPeople, addPerson, updatePerson, deletePerson } from '../api'
 import { useProfile } from '../ProfileContext'
 
-const PLAN_STYLES = {
-  breakfast: 'bg-notion-yellowBg text-notion-yellow',
-  lunch:     'bg-notion-blueBg text-notion-blue',
-  dinner:    'bg-notion-purpleBg text-notion-purple'
-}
 const PLAN_LABELS = { breakfast: 'B', lunch: 'L', dinner: 'D' }
 
 function PlanBadges({ person }) {
@@ -14,7 +9,7 @@ function PlanBadges({ person }) {
     <div className="flex gap-0.5">
       {['breakfast', 'lunch', 'dinner'].map(m =>
         person[m] ? (
-          <span key={m} className={`chip w-5 h-5 rounded flex items-center justify-center ${PLAN_STYLES[m]}`}>
+          <span key={m} className="chip w-5 h-5 rounded flex items-center justify-center bg-notion-hover text-notion-subtle border border-notion-border">
             {PLAN_LABELS[m]}
           </span>
         ) : null
@@ -56,7 +51,7 @@ function PersonForm({ initial, onSave, onCancel, saving }) {
           value={name}
           onChange={e => setName(e.target.value)}
           placeholder="Roommate's name"
-          className="w-full border border-notion-border rounded-md px-3 py-2 text-sm focus:border-notion-blue focus:ring-1 focus:ring-notion-blue"
+          className="w-full border border-notion-border rounded-md px-3 py-2 text-sm focus:border-notion-text focus:ring-1 focus:ring-notion-text"
           required
         />
       </div>
@@ -64,9 +59,9 @@ function PersonForm({ initial, onSave, onCancel, saving }) {
         <label className="label-mono block mb-1.5">Meal plan</label>
         <div className="flex gap-1.5">
           {[
-            { key: 'breakfast', icon: '☀️', label: 'Breakfast', price: '₹30' },
-            { key: 'lunch',     icon: '🌤️', label: 'Lunch',     price: '₹60' },
-            { key: 'dinner',    icon: '🌙', label: 'Dinner',    price: '₹30' }
+            { key: 'breakfast', icon: '☀', label: 'Breakfast', price: '₹30' },
+            { key: 'lunch',     icon: '◐', label: 'Lunch',     price: '₹60' },
+            { key: 'dinner',    icon: '☾', label: 'Dinner',    price: '₹30' }
           ].map(({ key, icon, label, price }) => (
             <label key={key} className="flex-1 cursor-pointer">
               <input
@@ -77,10 +72,10 @@ function PersonForm({ initial, onSave, onCancel, saving }) {
               />
               <div className={`border rounded-md p-2 text-center ${
                 meals[key]
-                  ? 'border-notion-blue bg-notion-blueBg/40'
+                  ? 'border-notion-text bg-notion-hover'
                   : 'border-notion-border bg-white hover:bg-notion-bgSoft'
               }`}>
-                <div className="text-base">{icon}</div>
+                <div className="text-base text-notion-subtle">{icon}</div>
                 <div className="text-xs font-medium text-notion-text">{label}</div>
                 <div className="stat-value text-[10px] text-notion-subtle">{price}</div>
               </div>
@@ -92,7 +87,7 @@ function PersonForm({ initial, onSave, onCancel, saving }) {
         <button
           type="submit"
           disabled={saving || !name.trim() || (!meals.breakfast && !meals.lunch && !meals.dinner)}
-          className="flex-1 py-2 bg-notion-blue text-white rounded-md text-sm font-medium hover:opacity-90 disabled:opacity-50"
+          className="flex-1 py-2 bg-notion-text text-white rounded-md text-sm font-medium hover:opacity-90 disabled:opacity-50"
         >
           {saving ? 'Saving...' : 'Save'}
         </button>
@@ -161,7 +156,7 @@ export default function People() {
         {!showAdd && (
           <button
             onClick={() => setShowAdd(true)}
-            className="px-3 py-1.5 bg-notion-blue text-white rounded-md text-sm font-medium hover:opacity-90"
+            className="px-3 py-1.5 bg-notion-text text-white rounded-md text-sm font-medium hover:opacity-90"
           >
             + Add person
           </button>
@@ -177,11 +172,11 @@ export default function People() {
 
       {people.length === 0 && !showAdd ? (
         <div className="text-center py-16 border border-dashed border-notion-border rounded-md bg-white">
-          <div className="text-3xl mb-2">👤</div>
+          <div className="text-3xl mb-2">·</div>
           <div className="text-notion-text font-medium">No roommates yet</div>
           <button
             onClick={() => setShowAdd(true)}
-            className="mt-3 px-3 py-1.5 bg-notion-blue text-white rounded-md text-sm font-medium hover:opacity-90"
+            className="mt-3 px-3 py-1.5 bg-notion-text text-white rounded-md text-sm font-medium hover:opacity-90"
           >
             Add first person
           </button>
@@ -203,14 +198,14 @@ export default function People() {
                     />
                   </div>
                 ) : deleteConfirm === person.id ? (
-                  <div className="p-4 bg-notion-redBg/40">
+                  <div className="p-4 bg-notion-hover border-l-2 border-notion-text">
                     <p className="text-sm text-notion-text mb-3">
                       Delete <strong>{person.name}</strong>? This removes all their meal history.
                     </p>
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleDelete(person.id)}
-                        className="flex-1 py-2 bg-notion-red text-white rounded-md text-sm font-medium hover:opacity-90"
+                        className="flex-1 py-2 bg-notion-text text-white rounded-md text-sm font-medium hover:opacity-90"
                       >
                         Delete
                       </button>
@@ -225,14 +220,14 @@ export default function People() {
                 ) : (
                   <div className="flex items-center justify-between px-3 py-2.5 hover:bg-notion-bgSoft group">
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="w-8 h-8 rounded-full bg-notion-orangeBg text-notion-orange flex items-center justify-center chip shrink-0">
+                      <div className="w-8 h-8 rounded-full bg-notion-hover text-notion-text flex items-center justify-center chip shrink-0 border border-notion-border">
                         {person.name.charAt(0).toUpperCase()}
                       </div>
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-notion-text truncate">{person.name}</span>
                           {isMe && (
-                            <span className="chip px-1.5 py-0.5 bg-notion-blueBg text-notion-blue rounded shrink-0">
+                            <span className="chip px-1.5 py-0.5 bg-notion-text text-white rounded shrink-0">
                               You
                             </span>
                           )}
@@ -247,14 +242,14 @@ export default function People() {
                         className="w-7 h-7 text-notion-light hover:text-notion-text hover:bg-notion-hover rounded flex items-center justify-center opacity-0 group-hover:opacity-100"
                         title="Edit"
                       >
-                        ✏️
+                        ✎
                       </button>
                       <button
                         onClick={() => setDeleteConfirm(person.id)}
-                        className="w-7 h-7 text-notion-light hover:text-notion-red hover:bg-notion-redBg/60 rounded flex items-center justify-center opacity-0 group-hover:opacity-100"
+                        className="w-7 h-7 text-notion-light hover:text-notion-text hover:bg-notion-hover rounded flex items-center justify-center opacity-0 group-hover:opacity-100"
                         title="Delete"
                       >
-                        🗑️
+                        ×
                       </button>
                     </div>
                   </div>

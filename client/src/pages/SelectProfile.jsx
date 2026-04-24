@@ -37,32 +37,34 @@ export default function SelectProfile() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start px-4 py-16 max-w-md mx-auto">
-      <div className="text-5xl mb-4">🍱</div>
+      <div className="w-12 h-12 rounded-md bg-notion-text text-white flex items-center justify-center chip mb-4">
+        M
+      </div>
       <h1 className="text-3xl font-bold text-notion-text tracking-tight mb-1">Mess Tracker</h1>
-      <p className="text-notion-subtle mb-10">Who are you?</p>
+      <p className="label-mono mb-10">Who are you?</p>
 
       <div className="w-full">
         {people.length === 0 && !showAdd ? (
-          <div className="text-center py-8 border border-dashed border-notion-border rounded-md">
+          <div className="text-center py-8 border border-dashed border-notion-border rounded-md bg-white">
             <div className="text-notion-text font-medium mb-1">Welcome</div>
             <div className="text-notion-subtle text-sm mb-4">No roommates added yet.</div>
             <button
               onClick={() => setShowAdd(true)}
-              className="px-4 py-2 bg-notion-blue text-white rounded-md text-sm font-medium hover:opacity-90"
+              className="px-4 py-2 bg-notion-text text-white rounded-md text-sm font-medium hover:opacity-90"
             >
               Add first person
             </button>
           </div>
         ) : (
           <>
-            <div className="divide-y divide-notion-border border border-notion-border rounded-md overflow-hidden mb-3">
+            <div className="divide-y divide-notion-border border border-notion-border rounded-md overflow-hidden mb-3 bg-white">
               {people.map(person => (
                 <button
                   key={person.id}
                   onClick={() => setProfileId(person.id)}
-                  className="group w-full bg-white hover:bg-notion-bgSoft flex items-center gap-3 px-3 py-2.5"
+                  className="group w-full hover:bg-notion-bgSoft flex items-center gap-3 px-3 py-2.5"
                 >
-                  <div className="w-8 h-8 rounded-full bg-notion-orangeBg text-notion-orange flex items-center justify-center chip">
+                  <div className="w-8 h-8 rounded-full bg-notion-hover text-notion-text flex items-center justify-center chip border border-notion-border">
                     {person.name.charAt(0).toUpperCase()}
                   </div>
                   <div className="text-left flex-1 min-w-0">
@@ -98,16 +100,16 @@ export default function SelectProfile() {
               value={name}
               onChange={e => setName(e.target.value)}
               placeholder="Your name"
-              className="w-full border border-notion-border rounded-md px-3 py-2 text-sm focus:border-notion-blue focus:ring-1 focus:ring-notion-blue"
+              className="w-full border border-notion-border rounded-md px-3 py-2 text-sm focus:border-notion-text focus:ring-1 focus:ring-notion-text"
               autoFocus
             />
             <div>
-              <div className="text-xs font-semibold text-notion-subtle mb-1.5">Meal plan</div>
+              <div className="label-mono mb-1.5">Meal plan</div>
               <div className="flex gap-1.5">
                 {[
-                  { k: 'breakfast', l: '☀️', name: 'Breakfast', price: '₹30' },
-                  { k: 'lunch',     l: '🌤️', name: 'Lunch',     price: '₹60' },
-                  { k: 'dinner',    l: '🌙', name: 'Dinner',    price: '₹30' }
+                  { k: 'breakfast', l: '☀', name: 'Breakfast', price: '₹30' },
+                  { k: 'lunch',     l: '◐', name: 'Lunch',     price: '₹60' },
+                  { k: 'dinner',    l: '☾', name: 'Dinner',    price: '₹30' }
                 ].map(({ k, l, name: mealName, price }) => (
                   <label key={k} className="flex-1 cursor-pointer">
                     <input
@@ -118,12 +120,12 @@ export default function SelectProfile() {
                     />
                     <div className={`border rounded-md p-2 text-center ${
                       meals[k]
-                        ? 'border-notion-blue bg-notion-blueBg/40'
+                        ? 'border-notion-text bg-notion-hover'
                         : 'border-notion-border bg-white hover:bg-notion-bgSoft'
                     }`}>
-                      <div className="text-base">{l}</div>
+                      <div className="text-base text-notion-subtle">{l}</div>
                       <div className="text-xs font-medium text-notion-text">{mealName}</div>
-                      <div className="text-[10px] text-notion-subtle">{price}</div>
+                      <div className="stat-value text-[10px] text-notion-subtle">{price}</div>
                     </div>
                   </label>
                 ))}
@@ -133,7 +135,7 @@ export default function SelectProfile() {
               <button
                 type="submit"
                 disabled={!name.trim() || saving || (!meals.breakfast && !meals.lunch && !meals.dinner)}
-                className="flex-1 py-2 bg-notion-blue text-white rounded-md text-sm font-medium hover:opacity-90 disabled:opacity-50"
+                className="flex-1 py-2 bg-notion-text text-white rounded-md text-sm font-medium hover:opacity-90 disabled:opacity-50"
               >
                 {saving ? 'Saving...' : 'Create & enter'}
               </button>
