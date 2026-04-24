@@ -29,7 +29,7 @@ function Navbar() {
             title="Switch profile"
             className="flex items-center gap-2 px-2 py-1 hover:bg-notion-hover rounded-md"
           >
-            <div className="w-6 h-6 rounded-full bg-notion-blueBg text-notion-blue flex items-center justify-center font-semibold text-[11px]">
+            <div className="w-6 h-6 rounded-full bg-notion-blueBg text-notion-blue flex items-center justify-center chip">
               {profile.name.charAt(0).toUpperCase()}
             </div>
             <span className="text-sm font-medium text-notion-text">{profile.name}</span>
@@ -59,7 +59,7 @@ export default function App() {
   if (!profileId) return <SelectProfile />
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen">
       <Navbar />
       <main className="max-w-2xl mx-auto px-4 py-6 pb-20">
         <Routes>

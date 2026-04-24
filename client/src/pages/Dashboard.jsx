@@ -9,11 +9,10 @@ const MEAL_PRICES = { breakfast: 30, lunch: 60, dinner: 30 }
 const STATUS_CYCLE = { pending: 'delivered', delivered: 'skipped', skipped: 'pending' }
 
 const STATUS_STYLE = {
-  pending:   'bg-notion-bgSoft text-notion-subtle border-notion-border hover:bg-notion-hover',
+  pending:   'bg-white text-notion-subtle border-notion-border hover:bg-notion-hover',
   delivered: 'bg-notion-greenBg text-notion-green border-transparent',
   skipped:   'bg-notion-redBg text-notion-red border-transparent'
 }
-const STATUS_LABEL = { pending: 'Pending', delivered: 'Delivered', skipped: 'Skipped' }
 
 function toDateStr(date) {
   const y = date.getFullYear()
@@ -115,7 +114,7 @@ export default function Dashboard() {
         </button>
         <div className="text-center">
           <h1 className="text-2xl font-bold text-notion-text tracking-tight">{formatDisplay(dateStr)}</h1>
-          <div className="text-xs text-notion-light mt-0.5">{dateStr}</div>
+          <div className="label-mono mt-1">{dateStr}</div>
         </div>
         <button
           onClick={() => shiftDate(1)}
@@ -136,11 +135,11 @@ export default function Dashboard() {
 
       {/* View toggle */}
       {!loading && people.length > 0 && (
-        <div className="inline-flex bg-notion-bgSoft border border-notion-border rounded-md p-0.5 mb-5">
+        <div className="inline-flex bg-white border border-notion-border rounded-md p-0.5 mb-5">
           <button
             onClick={() => setViewMode('mine')}
             className={`px-3 py-1 rounded text-sm font-medium ${
-              viewMode === 'mine' ? 'bg-white text-notion-text shadow-sm' : 'text-notion-subtle hover:text-notion-text'
+              viewMode === 'mine' ? 'bg-notion-hover text-notion-text' : 'text-notion-subtle hover:text-notion-text'
             }`}
           >
             My meals
@@ -148,7 +147,7 @@ export default function Dashboard() {
           <button
             onClick={() => setViewMode('all')}
             className={`px-3 py-1 rounded text-sm font-medium ${
-              viewMode === 'all' ? 'bg-white text-notion-text shadow-sm' : 'text-notion-subtle hover:text-notion-text'
+              viewMode === 'all' ? 'bg-notion-hover text-notion-text' : 'text-notion-subtle hover:text-notion-text'
             }`}
           >
             Everyone
@@ -158,20 +157,18 @@ export default function Dashboard() {
 
       {/* Summary */}
       {!loading && visiblePeople.length > 0 && (
-        <div className="grid grid-cols-3 gap-0 mb-6 border border-notion-border rounded-md overflow-hidden">
+        <div className="grid grid-cols-3 gap-0 mb-6 border border-notion-border rounded-md overflow-hidden bg-white">
           <div className="px-3 py-3 border-r border-notion-border">
-            <div className="text-xs text-notion-subtle font-medium">Delivered</div>
-            <div className="text-xl font-bold text-notion-text mt-0.5">{totalDelivered}</div>
+            <div className="label-mono">Delivered</div>
+            <div className="stat-value text-xl text-notion-text mt-1">{totalDelivered}</div>
           </div>
           <div className="px-3 py-3 border-r border-notion-border">
-            <div className="text-xs text-notion-subtle font-medium">Pending</div>
-            <div className="text-xl font-bold text-notion-text mt-0.5">{totalPending}</div>
+            <div className="label-mono">Pending</div>
+            <div className="stat-value text-xl text-notion-text mt-1">{totalPending}</div>
           </div>
           <div className="px-3 py-3">
-            <div className="text-xs text-notion-subtle font-medium">
-              {viewMode === 'mine' ? 'Your cost' : 'Total cost'}
-            </div>
-            <div className="text-xl font-bold text-notion-text mt-0.5">₹{totalCost}</div>
+            <div className="label-mono">{viewMode === 'mine' ? 'Your cost' : 'Total cost'}</div>
+            <div className="stat-value text-xl text-notion-text mt-1">₹{totalCost}</div>
           </div>
         </div>
       )}
@@ -179,13 +176,13 @@ export default function Dashboard() {
       {loading ? (
         <div className="text-center py-12 text-notion-light text-sm">Loading...</div>
       ) : people.length === 0 ? (
-        <div className="text-center py-16 border border-dashed border-notion-border rounded-md">
+        <div className="text-center py-16 border border-dashed border-notion-border rounded-md bg-white">
           <div className="text-3xl mb-2">👥</div>
           <div className="text-notion-text font-medium">No people added yet</div>
           <div className="text-sm text-notion-subtle mt-1">Head to the People tab to add roommates.</div>
         </div>
       ) : visiblePeople.length === 0 ? (
-        <div className="text-center py-12 border border-dashed border-notion-border rounded-md">
+        <div className="text-center py-12 border border-dashed border-notion-border rounded-md bg-white">
           <div className="text-notion-text">Your profile wasn't found.</div>
           <button
             onClick={() => setViewMode('all')}
@@ -195,7 +192,7 @@ export default function Dashboard() {
           </button>
         </div>
       ) : (
-        <div className="divide-y divide-notion-border border border-notion-border rounded-md overflow-hidden">
+        <div className="divide-y divide-notion-border border border-notion-border rounded-md overflow-hidden bg-white">
           {visiblePeople.map(person => {
             const allDone = Object.values(person.meals).every(s => s === 'delivered')
             const personCost = Object.entries(person.meals)
@@ -204,22 +201,22 @@ export default function Dashboard() {
             const isMe = person.id === profileId
 
             return (
-              <div key={person.id} className="bg-white hover:bg-notion-bgSoft">
+              <div key={person.id} className="hover:bg-notion-bgSoft">
                 <div className="flex items-center justify-between px-3 py-2.5">
                   <div className="flex items-center gap-2 min-w-0">
-                    <div className="w-7 h-7 rounded-full bg-notion-orangeBg text-notion-orange flex items-center justify-center font-semibold text-xs shrink-0">
+                    <div className="w-7 h-7 rounded-full bg-notion-orangeBg text-notion-orange flex items-center justify-center chip shrink-0">
                       {person.name.charAt(0).toUpperCase()}
                     </div>
                     <span className="font-medium text-notion-text truncate">{person.name}</span>
                     {isMe && (
-                      <span className="text-[10px] font-semibold px-1.5 py-0.5 bg-notion-blueBg text-notion-blue rounded">
+                      <span className="chip px-1.5 py-0.5 bg-notion-blueBg text-notion-blue rounded">
                         You
                       </span>
                     )}
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     {personCost > 0 && (
-                      <span className="text-sm font-semibold text-notion-text">₹{personCost}</span>
+                      <span className="stat-value text-sm text-notion-text">₹{personCost}</span>
                     )}
                     {!allDone && !isFuture && (
                       <button
@@ -242,7 +239,7 @@ export default function Dashboard() {
                       >
                         <span>{MEAL_ICONS[meal]}</span>
                         <span className="text-xs">{MEAL_LABELS[meal]}</span>
-                        <span className="text-[11px] opacity-80">· {STATUS_LABEL[status]}</span>
+                        <span className="chip opacity-80">· {status}</span>
                       </button>
                     )
                   })}

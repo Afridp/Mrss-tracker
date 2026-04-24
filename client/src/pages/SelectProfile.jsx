@@ -62,7 +62,7 @@ export default function SelectProfile() {
                   onClick={() => setProfileId(person.id)}
                   className="group w-full bg-white hover:bg-notion-bgSoft flex items-center gap-3 px-3 py-2.5"
                 >
-                  <div className="w-8 h-8 rounded-full bg-notion-orangeBg text-notion-orange flex items-center justify-center font-semibold text-sm">
+                  <div className="w-8 h-8 rounded-full bg-notion-orangeBg text-notion-orange flex items-center justify-center chip">
                     {person.name.charAt(0).toUpperCase()}
                   </div>
                   <div className="text-left flex-1 min-w-0">

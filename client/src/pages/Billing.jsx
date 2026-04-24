@@ -54,7 +54,7 @@ export default function Billing() {
         </button>
         <div className="text-center">
           <h1 className="text-2xl font-bold text-notion-text tracking-tight">{monthDisplay(month)}</h1>
-          <div className="text-xs text-notion-light mt-0.5">Billing</div>
+          <div className="label-mono mt-1">Billing</div>
         </div>
         <button
           onClick={() => shiftMonth(1)}
@@ -77,11 +77,11 @@ export default function Billing() {
       {/* Your bill callout */}
       {!loading && myRow && (
         <div className="mb-5 bg-notion-blueBg/50 border border-notion-blueBg rounded-md px-4 py-3">
-          <div className="text-xs text-notion-blue font-semibold mb-0.5">YOUR BILL</div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-notion-text tracking-tight">₹{myRow.total}</span>
+          <div className="label-mono text-notion-blue">Your bill</div>
+          <div className="flex items-baseline gap-2 mt-1">
+            <span className="stat-value text-2xl text-notion-text">₹{myRow.total}</span>
             <span className="text-sm text-notion-subtle">
-              · {Object.values(myRow.counts).reduce((a, b) => a + b, 0)} meals
+              · <span className="stat-value">{Object.values(myRow.counts).reduce((a, b) => a + b, 0)}</span> meals
             </span>
           </div>
         </div>
@@ -89,14 +89,14 @@ export default function Billing() {
 
       {/* Summary */}
       {!loading && data.length > 0 && (
-        <div className="grid grid-cols-2 gap-0 mb-6 border border-notion-border rounded-md overflow-hidden">
+        <div className="grid grid-cols-2 gap-0 mb-6 border border-notion-border rounded-md overflow-hidden bg-white">
           <div className="px-3 py-3 border-r border-notion-border">
-            <div className="text-xs text-notion-subtle font-medium">Total billed</div>
-            <div className="text-xl font-bold text-notion-text mt-0.5">₹{grandTotal}</div>
+            <div className="label-mono">Total billed</div>
+            <div className="stat-value text-xl text-notion-text mt-1">₹{grandTotal}</div>
           </div>
           <div className="px-3 py-3">
-            <div className="text-xs text-notion-subtle font-medium">Meals delivered</div>
-            <div className="text-xl font-bold text-notion-text mt-0.5">{grandMeals}</div>
+            <div className="label-mono">Meals delivered</div>
+            <div className="stat-value text-xl text-notion-text mt-1">{grandMeals}</div>
           </div>
         </div>
       )}
@@ -104,31 +104,31 @@ export default function Billing() {
       {loading ? (
         <div className="text-center py-12 text-notion-light text-sm">Loading...</div>
       ) : data.length === 0 ? (
-        <div className="text-center py-16 border border-dashed border-notion-border rounded-md">
+        <div className="text-center py-16 border border-dashed border-notion-border rounded-md bg-white">
           <div className="text-3xl mb-2">📋</div>
           <div className="text-notion-text font-medium">No data for this month</div>
         </div>
       ) : (
         <div>
-          <div className="divide-y divide-notion-border border border-notion-border rounded-md overflow-hidden">
+          <div className="divide-y divide-notion-border border border-notion-border rounded-md overflow-hidden bg-white">
             {data.map(person => {
               const hasMeals = Object.values(person.counts).some(c => c > 0)
               const isMe = person.id === profileId
               return (
-                <div key={person.id} className="bg-white hover:bg-notion-bgSoft">
+                <div key={person.id} className="hover:bg-notion-bgSoft">
                   <div className="flex items-center justify-between px-3 py-2.5">
                     <div className="flex items-center gap-2 min-w-0">
-                      <div className="w-7 h-7 rounded-full bg-notion-orangeBg text-notion-orange flex items-center justify-center font-semibold text-xs shrink-0">
+                      <div className="w-7 h-7 rounded-full bg-notion-orangeBg text-notion-orange flex items-center justify-center chip shrink-0">
                         {person.name.charAt(0).toUpperCase()}
                       </div>
                       <span className="font-medium text-notion-text truncate">{person.name}</span>
                       {isMe && (
-                        <span className="text-[10px] font-semibold px-1.5 py-0.5 bg-notion-blueBg text-notion-blue rounded">
+                        <span className="chip px-1.5 py-0.5 bg-notion-blueBg text-notion-blue rounded">
                           You
                         </span>
                       )}
                     </div>
-                    <span className={`text-base font-semibold tracking-tight ${hasMeals ? 'text-notion-text' : 'text-notion-light'}`}>
+                    <span className={`stat-value text-base ${hasMeals ? 'text-notion-text' : 'text-notion-light'}`}>
                       ₹{person.total}
                     </span>
                   </div>
@@ -138,10 +138,10 @@ export default function Billing() {
                       const count = person.counts[meal] || 0
                       return (
                         <div key={meal} className="flex-1 bg-notion-bgSoft border border-notion-border rounded px-2 py-1.5 flex items-center justify-between">
-                          <span className="text-xs text-notion-subtle">
-                            {MEAL_ICONS[meal]} {meal.slice(0, 1).toUpperCase() + meal.slice(1, 3)}
+                          <span className="label-mono">
+                            {MEAL_ICONS[meal]} {meal.slice(0, 3)}
                           </span>
-                          <span className="text-xs font-semibold text-notion-text">
+                          <span className="stat-value text-xs text-notion-text">
                             {count}× · ₹{count * MEAL_PRICES[meal]}
                           </span>
                         </div>
@@ -153,12 +153,12 @@ export default function Billing() {
             })}
           </div>
 
-          <div className="mt-4 border border-notion-border rounded-md px-4 py-3 flex items-center justify-between bg-notion-bgSoft">
+          <div className="mt-4 border border-notion-border rounded-md px-4 py-3 flex items-center justify-between bg-white">
             <div>
               <div className="font-semibold text-notion-text">Grand total</div>
-              <div className="text-xs text-notion-subtle">{grandMeals} meals · {data.length} people</div>
+              <div className="label-mono mt-0.5"><span className="stat-value normal-case tracking-normal">{grandMeals}</span> meals · <span className="stat-value normal-case tracking-normal">{data.length}</span> people</div>
             </div>
-            <div className="text-2xl font-bold text-notion-text tracking-tight">₹{grandTotal}</div>
+            <div className="stat-value text-2xl text-notion-text">₹{grandTotal}</div>
           </div>
         </div>
       )}

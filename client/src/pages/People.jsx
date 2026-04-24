@@ -14,7 +14,7 @@ function PlanBadges({ person }) {
     <div className="flex gap-0.5">
       {['breakfast', 'lunch', 'dinner'].map(m =>
         person[m] ? (
-          <span key={m} className={`text-[10px] font-semibold w-5 h-5 rounded flex items-center justify-center ${PLAN_STYLES[m]}`}>
+          <span key={m} className={`chip w-5 h-5 rounded flex items-center justify-center ${PLAN_STYLES[m]}`}>
             {PLAN_LABELS[m]}
           </span>
         ) : null
@@ -51,7 +51,7 @@ function PersonForm({ initial, onSave, onCancel, saving }) {
   return (
     <form onSubmit={submit} className="space-y-3">
       <div>
-        <label className="block text-xs font-semibold text-notion-subtle mb-1">Name</label>
+        <label className="label-mono block mb-1">Name</label>
         <input
           value={name}
           onChange={e => setName(e.target.value)}
@@ -61,7 +61,7 @@ function PersonForm({ initial, onSave, onCancel, saving }) {
         />
       </div>
       <div>
-        <label className="block text-xs font-semibold text-notion-subtle mb-1.5">Meal plan</label>
+        <label className="label-mono block mb-1.5">Meal plan</label>
         <div className="flex gap-1.5">
           {[
             { key: 'breakfast', icon: '☀️', label: 'Breakfast', price: '₹30' },
@@ -82,7 +82,7 @@ function PersonForm({ initial, onSave, onCancel, saving }) {
               }`}>
                 <div className="text-base">{icon}</div>
                 <div className="text-xs font-medium text-notion-text">{label}</div>
-                <div className="text-[10px] text-notion-subtle">{price}</div>
+                <div className="stat-value text-[10px] text-notion-subtle">{price}</div>
               </div>
             </label>
           ))}
@@ -156,7 +156,7 @@ export default function People() {
       <div className="flex items-center justify-between mb-5">
         <div>
           <h1 className="text-2xl font-bold text-notion-text tracking-tight">Roommates</h1>
-          <div className="text-xs text-notion-light mt-0.5">{people.length} {people.length === 1 ? 'person' : 'people'}</div>
+          <div className="label-mono mt-1"><span className="stat-value normal-case tracking-normal">{people.length}</span> {people.length === 1 ? 'person' : 'people'}</div>
         </div>
         {!showAdd && (
           <button
@@ -176,7 +176,7 @@ export default function People() {
       )}
 
       {people.length === 0 && !showAdd ? (
-        <div className="text-center py-16 border border-dashed border-notion-border rounded-md">
+        <div className="text-center py-16 border border-dashed border-notion-border rounded-md bg-white">
           <div className="text-3xl mb-2">👤</div>
           <div className="text-notion-text font-medium">No roommates yet</div>
           <button
@@ -187,11 +187,11 @@ export default function People() {
           </button>
         </div>
       ) : (
-        <div className="divide-y divide-notion-border border border-notion-border rounded-md overflow-hidden">
+        <div className="divide-y divide-notion-border border border-notion-border rounded-md overflow-hidden bg-white">
           {people.map(person => {
             const isMe = person.id === profileId
             return (
-              <div key={person.id} className="bg-white">
+              <div key={person.id}>
                 {editId === person.id ? (
                   <div className="p-4">
                     <h3 className="font-semibold text-notion-text mb-3">Edit {person.name}</h3>
@@ -225,14 +225,14 @@ export default function People() {
                 ) : (
                   <div className="flex items-center justify-between px-3 py-2.5 hover:bg-notion-bgSoft group">
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="w-8 h-8 rounded-full bg-notion-orangeBg text-notion-orange flex items-center justify-center font-semibold text-sm shrink-0">
+                      <div className="w-8 h-8 rounded-full bg-notion-orangeBg text-notion-orange flex items-center justify-center chip shrink-0">
                         {person.name.charAt(0).toUpperCase()}
                       </div>
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-notion-text truncate">{person.name}</span>
                           {isMe && (
-                            <span className="text-[10px] font-semibold px-1.5 py-0.5 bg-notion-blueBg text-notion-blue rounded shrink-0">
+                            <span className="chip px-1.5 py-0.5 bg-notion-blueBg text-notion-blue rounded shrink-0">
                               You
                             </span>
                           )}
