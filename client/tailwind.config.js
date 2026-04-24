@@ -1,33 +1,20 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./index.html', './src/**/*.{js,jsx}'],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
         notion: {
-          text:     '#2a2a27',
-          subtle:   '#6b6b68',
-          light:    '#9b9a97',
-          bg:       '#ffffff',
-          bgSoft:   '#ebeae4',
-          page:     '#d3d2cd',
-          hover:    '#ebeae4',
-          hoverMid: '#dedcd4',
-          border:   '#c7c6bf',
-          blue:     '#2383e2',
-          blueBg:   '#d3e5ef',
-          green:    '#448361',
-          greenBg:  '#dbeddb',
-          red:      '#e03e3e',
-          redBg:    '#ffe2dd',
-          orange:   '#d9730d',
-          orangeBg: '#fadec9',
-          yellow:   '#dfab01',
-          yellowBg: '#fdecc8',
-          purple:   '#6940a5',
-          purpleBg: '#e8deee',
-          pink:     '#ad1a72',
-          pinkBg:   '#f5e0e9'
+          text:     'rgb(var(--notion-text) / <alpha-value>)',
+          subtle:   'rgb(var(--notion-subtle) / <alpha-value>)',
+          light:    'rgb(var(--notion-light) / <alpha-value>)',
+          bg:       'rgb(var(--notion-bg) / <alpha-value>)',
+          bgSoft:   'rgb(var(--notion-bgSoft) / <alpha-value>)',
+          page:     'rgb(var(--notion-page) / <alpha-value>)',
+          hover:    'rgb(var(--notion-hover) / <alpha-value>)',
+          hoverMid: 'rgb(var(--notion-hoverMid) / <alpha-value>)',
+          border:   'rgb(var(--notion-border) / <alpha-value>)'
         }
       },
       fontFamily: {

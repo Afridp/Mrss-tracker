@@ -5,6 +5,20 @@ import People from './pages/People'
 import Billing from './pages/Billing'
 import SelectProfile from './pages/SelectProfile'
 import { useProfile } from './ProfileContext'
+import { useTheme } from './ThemeContext'
+
+function ThemeToggle() {
+  const { theme, toggle } = useTheme()
+  return (
+    <button
+      onClick={toggle}
+      title={theme === 'dark' ? 'Switch to light' : 'Switch to dark'}
+      className="w-8 h-8 rounded-md hover:bg-notion-hover text-notion-subtle flex items-center justify-center text-[15px]"
+    >
+      {theme === 'dark' ? '☀' : '☾'}
+    </button>
+  )
+}
 
 function Navbar() {
   const { profile, setProfileId } = useProfile()
@@ -17,24 +31,27 @@ function Navbar() {
     }`
 
   return (
-    <header className="sticky top-0 z-20 bg-white border-b border-notion-border">
+    <header className="sticky top-0 z-20 bg-notion-bg border-b border-notion-border">
       <div className="max-w-2xl mx-auto px-4 py-2.5 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-xl">🍱</span>
           <span className="font-semibold text-notion-text text-[15px]">Mess Tracker</span>
         </div>
-        {profile && (
-          <button
-            onClick={() => setProfileId(null)}
-            title="Switch profile"
-            className="flex items-center gap-2 px-2 py-1 hover:bg-notion-hover rounded-md"
-          >
-            <div className="w-6 h-6 rounded-full bg-notion-hover text-notion-text border border-notion-border flex items-center justify-center chip">
-              {profile.name.charAt(0).toUpperCase()}
-            </div>
-            <span className="text-sm font-medium text-notion-text">{profile.name}</span>
-          </button>
-        )}
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
+          {profile && (
+            <button
+              onClick={() => setProfileId(null)}
+              title="Switch profile"
+              className="flex items-center gap-2 px-2 py-1 hover:bg-notion-hover rounded-md"
+            >
+              <div className="w-6 h-6 rounded-full bg-notion-hover text-notion-text border border-notion-border flex items-center justify-center chip">
+                {profile.name.charAt(0).toUpperCase()}
+              </div>
+              <span className="text-sm font-medium text-notion-text">{profile.name}</span>
+            </button>
+          )}
+        </div>
       </div>
       <div className="max-w-2xl mx-auto px-3 pb-2 flex gap-1">
         <NavLink to="/" className={linkClass}>Today</NavLink>
@@ -50,7 +67,7 @@ export default function App() {
 
   if (checking) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-notion-page">
         <div className="text-notion-light text-sm">Loading...</div>
       </div>
     )

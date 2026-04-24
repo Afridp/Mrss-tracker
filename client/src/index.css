@@ -4,22 +4,48 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --notion-text:     42 42 39;
+  --notion-subtle:   107 107 104;
+  --notion-light:    155 154 151;
+  --notion-bg:       255 255 255;
+  --notion-bgSoft:   235 234 228;
+  --notion-page:     211 210 205;
+  --notion-hover:    235 234 228;
+  --notion-hoverMid: 222 220 212;
+  --notion-border:   199 198 191;
+}
+
+.dark {
+  --notion-text:     227 226 224;
+  --notion-subtle:   155 154 151;
+  --notion-light:    120 119 116;
+  --notion-bg:       37 37 37;
+  --notion-bgSoft:   31 31 31;
+  --notion-page:     25 25 25;
+  --notion-hover:    55 55 55;
+  --notion-hoverMid: 47 47 47;
+  --notion-border:   55 55 55;
+}
+
 html, body {
   font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   font-feature-settings: 'ss01', 'cv01', 'cv11';
-  color: #2a2a27;
-  background: #d3d2cd;
+  color: rgb(var(--notion-text));
+  background: rgb(var(--notion-page));
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
 }
 
+body, button, a, div, span, header, main, input, form {
+  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(55, 53, 47, 0.18); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(55, 53, 47, 0.32); }
-
-button, a { transition: background-color 100ms ease, color 100ms ease, border-color 100ms ease; }
+::-webkit-scrollbar-thumb { background: rgba(127, 127, 127, 0.28); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(127, 127, 127, 0.48); }
 
 input:focus, textarea:focus { outline: none; }
 
@@ -30,7 +56,7 @@ input:focus, textarea:focus { outline: none; }
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.14em;
-    color: #787774;
+    color: rgb(var(--notion-subtle));
   }
 
   .stat-value {

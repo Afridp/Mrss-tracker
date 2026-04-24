@@ -37,7 +37,7 @@ export default function SelectProfile() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start px-4 py-16 max-w-md mx-auto">
-      <div className="w-12 h-12 rounded-md bg-notion-text text-white flex items-center justify-center chip mb-4">
+      <div className="w-12 h-12 rounded-md bg-notion-text text-notion-bg flex items-center justify-center chip mb-4">
         M
       </div>
       <h1 className="text-3xl font-bold text-notion-text tracking-tight mb-1">Mess Tracker</h1>
@@ -45,19 +45,19 @@ export default function SelectProfile() {
 
       <div className="w-full">
         {people.length === 0 && !showAdd ? (
-          <div className="text-center py-8 border border-dashed border-notion-border rounded-md bg-white">
+          <div className="text-center py-8 border border-dashed border-notion-border rounded-md bg-notion-bg">
             <div className="text-notion-text font-medium mb-1">Welcome</div>
             <div className="text-notion-subtle text-sm mb-4">No roommates added yet.</div>
             <button
               onClick={() => setShowAdd(true)}
-              className="px-4 py-2 bg-notion-text text-white rounded-md text-sm font-medium hover:opacity-90"
+              className="px-4 py-2 bg-notion-text text-notion-bg rounded-md text-sm font-medium hover:opacity-90"
             >
               Add first person
             </button>
           </div>
         ) : (
           <>
-            <div className="divide-y divide-notion-border border border-notion-border rounded-md overflow-hidden mb-3 bg-white">
+            <div className="divide-y divide-notion-border border border-notion-border rounded-md overflow-hidden mb-3 bg-notion-bg">
               {people.map(person => (
                 <button
                   key={person.id}
@@ -93,7 +93,7 @@ export default function SelectProfile() {
         )}
 
         {showAdd && (
-          <form onSubmit={handleAdd} className="bg-white border border-notion-border rounded-md p-4 mt-3 space-y-3">
+          <form onSubmit={handleAdd} className="bg-notion-bg border border-notion-border rounded-md p-4 mt-3 space-y-3">
             <h3 className="font-semibold text-notion-text">New profile</h3>
             <input
               type="text"
@@ -121,7 +121,7 @@ export default function SelectProfile() {
                     <div className={`border rounded-md p-2 text-center ${
                       meals[k]
                         ? 'border-notion-text bg-notion-hover'
-                        : 'border-notion-border bg-white hover:bg-notion-bgSoft'
+                        : 'border-notion-border bg-notion-bg hover:bg-notion-bgSoft'
                     }`}>
                       <div className="text-base text-notion-subtle">{l}</div>
                       <div className="text-xs font-medium text-notion-text">{mealName}</div>
@@ -135,14 +135,14 @@ export default function SelectProfile() {
               <button
                 type="submit"
                 disabled={!name.trim() || saving || (!meals.breakfast && !meals.lunch && !meals.dinner)}
-                className="flex-1 py-2 bg-notion-text text-white rounded-md text-sm font-medium hover:opacity-90 disabled:opacity-50"
+                className="flex-1 py-2 bg-notion-text text-notion-bg rounded-md text-sm font-medium hover:opacity-90 disabled:opacity-50"
               >
                 {saving ? 'Saving...' : 'Create & enter'}
               </button>
               <button
                 type="button"
                 onClick={() => { setShowAdd(false); setName('') }}
-                className="flex-1 py-2 bg-white text-notion-text border border-notion-border rounded-md text-sm font-medium hover:bg-notion-hover"
+                className="flex-1 py-2 bg-notion-bg text-notion-text border border-notion-border rounded-md text-sm font-medium hover:bg-notion-hover"
               >
                 Cancel
               </button>

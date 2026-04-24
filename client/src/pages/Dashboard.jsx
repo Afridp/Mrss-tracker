@@ -9,8 +9,8 @@ const MEAL_PRICES = { breakfast: 30, lunch: 60, dinner: 30 }
 const STATUS_CYCLE = { pending: 'delivered', delivered: 'skipped', skipped: 'pending' }
 
 const STATUS_STYLE = {
-  pending:   'bg-white text-notion-subtle border-notion-border hover:bg-notion-hover',
-  delivered: 'bg-notion-text text-white border-notion-text',
+  pending:   'bg-notion-bg text-notion-subtle border-notion-border hover:bg-notion-hover',
+  delivered: 'bg-notion-text text-notion-bg border-notion-text',
   skipped:   'bg-notion-hover text-notion-light border-notion-border line-through'
 }
 
@@ -127,7 +127,7 @@ export default function Dashboard() {
       {!isToday && (
         <button
           onClick={() => setDateStr(toDateStr(new Date()))}
-          className="w-full mb-4 py-1.5 text-sm text-notion-text hover:bg-notion-hover rounded-md font-medium border border-notion-border bg-white"
+          className="w-full mb-4 py-1.5 text-sm text-notion-text hover:bg-notion-hover rounded-md font-medium border border-notion-border bg-notion-bg"
         >
           Jump to today
         </button>
@@ -135,7 +135,7 @@ export default function Dashboard() {
 
       {/* View toggle */}
       {!loading && people.length > 0 && (
-        <div className="inline-flex bg-white border border-notion-border rounded-md p-0.5 mb-5">
+        <div className="inline-flex bg-notion-bg border border-notion-border rounded-md p-0.5 mb-5">
           <button
             onClick={() => setViewMode('mine')}
             className={`px-3 py-1 rounded text-sm font-medium ${
@@ -157,7 +157,7 @@ export default function Dashboard() {
 
       {/* Summary */}
       {!loading && visiblePeople.length > 0 && (
-        <div className="grid grid-cols-3 gap-0 mb-6 border border-notion-border rounded-md overflow-hidden bg-white">
+        <div className="grid grid-cols-3 gap-0 mb-6 border border-notion-border rounded-md overflow-hidden bg-notion-bg">
           <div className="px-3 py-3 border-r border-notion-border">
             <div className="label-mono">Delivered</div>
             <div className="stat-value text-xl text-notion-text mt-1">{totalDelivered}</div>
@@ -176,13 +176,13 @@ export default function Dashboard() {
       {loading ? (
         <div className="text-center py-12 text-notion-light text-sm">Loading...</div>
       ) : people.length === 0 ? (
-        <div className="text-center py-16 border border-dashed border-notion-border rounded-md bg-white">
+        <div className="text-center py-16 border border-dashed border-notion-border rounded-md bg-notion-bg">
           <div className="text-3xl mb-2">·</div>
           <div className="text-notion-text font-medium">No people added yet</div>
           <div className="text-sm text-notion-subtle mt-1">Head to the People tab to add roommates.</div>
         </div>
       ) : visiblePeople.length === 0 ? (
-        <div className="text-center py-12 border border-dashed border-notion-border rounded-md bg-white">
+        <div className="text-center py-12 border border-dashed border-notion-border rounded-md bg-notion-bg">
           <div className="text-notion-text">Your profile wasn't found.</div>
           <button
             onClick={() => setViewMode('all')}
@@ -192,7 +192,7 @@ export default function Dashboard() {
           </button>
         </div>
       ) : (
-        <div className="divide-y divide-notion-border border border-notion-border rounded-md overflow-hidden bg-white">
+        <div className="divide-y divide-notion-border border border-notion-border rounded-md overflow-hidden bg-notion-bg">
           {visiblePeople.map(person => {
             const allDone = Object.values(person.meals).every(s => s === 'delivered')
             const personCost = Object.entries(person.meals)
@@ -209,7 +209,7 @@ export default function Dashboard() {
                     </div>
                     <span className="font-medium text-notion-text truncate">{person.name}</span>
                     {isMe && (
-                      <span className="chip px-1.5 py-0.5 bg-notion-text text-white rounded">
+                      <span className="chip px-1.5 py-0.5 bg-notion-text text-notion-bg rounded">
                         You
                       </span>
                     )}

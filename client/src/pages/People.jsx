@@ -73,7 +73,7 @@ function PersonForm({ initial, onSave, onCancel, saving }) {
               <div className={`border rounded-md p-2 text-center ${
                 meals[key]
                   ? 'border-notion-text bg-notion-hover'
-                  : 'border-notion-border bg-white hover:bg-notion-bgSoft'
+                  : 'border-notion-border bg-notion-bg hover:bg-notion-bgSoft'
               }`}>
                 <div className="text-base text-notion-subtle">{icon}</div>
                 <div className="text-xs font-medium text-notion-text">{label}</div>
@@ -87,7 +87,7 @@ function PersonForm({ initial, onSave, onCancel, saving }) {
         <button
           type="submit"
           disabled={saving || !name.trim() || (!meals.breakfast && !meals.lunch && !meals.dinner)}
-          className="flex-1 py-2 bg-notion-text text-white rounded-md text-sm font-medium hover:opacity-90 disabled:opacity-50"
+          className="flex-1 py-2 bg-notion-text text-notion-bg rounded-md text-sm font-medium hover:opacity-90 disabled:opacity-50"
         >
           {saving ? 'Saving...' : 'Save'}
         </button>
@@ -95,7 +95,7 @@ function PersonForm({ initial, onSave, onCancel, saving }) {
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 py-2 bg-white text-notion-text border border-notion-border rounded-md text-sm font-medium hover:bg-notion-hover"
+            className="flex-1 py-2 bg-notion-bg text-notion-text border border-notion-border rounded-md text-sm font-medium hover:bg-notion-hover"
           >
             Cancel
           </button>
@@ -156,7 +156,7 @@ export default function People() {
         {!showAdd && (
           <button
             onClick={() => setShowAdd(true)}
-            className="px-3 py-1.5 bg-notion-text text-white rounded-md text-sm font-medium hover:opacity-90"
+            className="px-3 py-1.5 bg-notion-text text-notion-bg rounded-md text-sm font-medium hover:opacity-90"
           >
             + Add person
           </button>
@@ -164,25 +164,25 @@ export default function People() {
       </div>
 
       {showAdd && (
-        <div className="bg-white border border-notion-border rounded-md p-4 mb-4">
+        <div className="bg-notion-bg border border-notion-border rounded-md p-4 mb-4">
           <h3 className="font-semibold text-notion-text mb-3">New roommate</h3>
           <PersonForm onSave={handleAdd} onCancel={() => setShowAdd(false)} saving={saving} />
         </div>
       )}
 
       {people.length === 0 && !showAdd ? (
-        <div className="text-center py-16 border border-dashed border-notion-border rounded-md bg-white">
+        <div className="text-center py-16 border border-dashed border-notion-border rounded-md bg-notion-bg">
           <div className="text-3xl mb-2">·</div>
           <div className="text-notion-text font-medium">No roommates yet</div>
           <button
             onClick={() => setShowAdd(true)}
-            className="mt-3 px-3 py-1.5 bg-notion-text text-white rounded-md text-sm font-medium hover:opacity-90"
+            className="mt-3 px-3 py-1.5 bg-notion-text text-notion-bg rounded-md text-sm font-medium hover:opacity-90"
           >
             Add first person
           </button>
         </div>
       ) : (
-        <div className="divide-y divide-notion-border border border-notion-border rounded-md overflow-hidden bg-white">
+        <div className="divide-y divide-notion-border border border-notion-border rounded-md overflow-hidden bg-notion-bg">
           {people.map(person => {
             const isMe = person.id === profileId
             return (
@@ -205,13 +205,13 @@ export default function People() {
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleDelete(person.id)}
-                        className="flex-1 py-2 bg-notion-text text-white rounded-md text-sm font-medium hover:opacity-90"
+                        className="flex-1 py-2 bg-notion-text text-notion-bg rounded-md text-sm font-medium hover:opacity-90"
                       >
                         Delete
                       </button>
                       <button
                         onClick={() => setDeleteConfirm(null)}
-                        className="flex-1 py-2 bg-white text-notion-text border border-notion-border rounded-md text-sm font-medium hover:bg-notion-hover"
+                        className="flex-1 py-2 bg-notion-bg text-notion-text border border-notion-border rounded-md text-sm font-medium hover:bg-notion-hover"
                       >
                         Cancel
                       </button>
@@ -227,7 +227,7 @@ export default function People() {
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-notion-text truncate">{person.name}</span>
                           {isMe && (
-                            <span className="chip px-1.5 py-0.5 bg-notion-text text-white rounded shrink-0">
+                            <span className="chip px-1.5 py-0.5 bg-notion-text text-notion-bg rounded shrink-0">
                               You
                             </span>
                           )}
