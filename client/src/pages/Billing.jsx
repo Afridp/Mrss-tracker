@@ -45,21 +45,21 @@ export default function Billing() {
   return (
     <div>
       {/* Month nav */}
-      <div className="flex items-center justify-between mb-4 bg-white/70 rounded-2xl border border-stone-200/60 shadow-sm px-2 py-2">
+      <div className="flex items-center justify-between mb-5">
         <button
           onClick={() => shiftMonth(-1)}
-          className="w-10 h-10 rounded-xl hover:bg-stone-100 text-stone-600 text-xl flex items-center justify-center"
+          className="w-8 h-8 rounded-md hover:bg-notion-hover text-notion-subtle flex items-center justify-center"
         >
           ←
         </button>
         <div className="text-center">
-          <div className="text-lg font-bold text-stone-900 tracking-tight">{monthDisplay(month)}</div>
-          <div className="text-xs text-stone-400 font-medium uppercase tracking-wide">Billing</div>
+          <h1 className="text-2xl font-bold text-notion-text tracking-tight">{monthDisplay(month)}</h1>
+          <div className="text-xs text-notion-light mt-0.5">Billing</div>
         </div>
         <button
           onClick={() => shiftMonth(1)}
           disabled={month >= currentMonth}
-          className="w-10 h-10 rounded-xl hover:bg-stone-100 text-stone-600 text-xl flex items-center justify-center disabled:opacity-30 disabled:hover:bg-transparent"
+          className="w-8 h-8 rounded-md hover:bg-notion-hover text-notion-subtle flex items-center justify-center disabled:opacity-30 disabled:hover:bg-transparent"
         >
           →
         </button>
@@ -68,97 +68,97 @@ export default function Billing() {
       {month !== currentMonth && (
         <button
           onClick={() => setMonth(currentMonth)}
-          className="w-full mb-4 py-2 text-sm font-medium text-orange-700 bg-orange-50/70 border border-orange-200 rounded-xl hover:bg-orange-100"
+          className="w-full mb-4 py-1.5 text-sm text-notion-blue hover:bg-notion-blueBg rounded-md font-medium"
         >
-          Jump to Current Month
+          Jump to current month
         </button>
       )}
 
-      {/* Summary */}
-      {!loading && data.length > 0 && (
-        <div className="grid grid-cols-2 gap-2 mb-5">
-          <div className="bg-gradient-to-br from-orange-50 to-rose-100/50 border border-orange-200/50 rounded-2xl p-4 text-center">
-            <div className="text-3xl font-bold text-orange-700 tracking-tight">₹{grandTotal}</div>
-            <div className="text-[11px] text-orange-600/80 font-medium uppercase tracking-wide mt-0.5">Total Billed</div>
-          </div>
-          <div className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200/50 rounded-2xl p-4 text-center">
-            <div className="text-3xl font-bold text-emerald-700 tracking-tight">{grandMeals}</div>
-            <div className="text-[11px] text-emerald-600/80 font-medium uppercase tracking-wide mt-0.5">Meals Delivered</div>
-          </div>
-        </div>
-      )}
-
       {/* Your bill callout */}
-      {!loading && myRow && myRow.total > 0 && (
-        <div className="mb-5 bg-gradient-to-br from-stone-900 to-stone-800 rounded-2xl p-4 text-white shadow-lg">
-          <div className="text-xs text-orange-200/80 font-medium uppercase tracking-wider mb-1">Your Bill</div>
+      {!loading && myRow && (
+        <div className="mb-5 bg-notion-blueBg/50 border border-notion-blueBg rounded-md px-4 py-3">
+          <div className="text-xs text-notion-blue font-semibold mb-0.5">YOUR BILL</div>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-bold tracking-tight">₹{myRow.total}</span>
-            <span className="text-sm text-stone-400">
+            <span className="text-2xl font-bold text-notion-text tracking-tight">₹{myRow.total}</span>
+            <span className="text-sm text-notion-subtle">
               · {Object.values(myRow.counts).reduce((a, b) => a + b, 0)} meals
             </span>
           </div>
         </div>
       )}
 
+      {/* Summary */}
+      {!loading && data.length > 0 && (
+        <div className="grid grid-cols-2 gap-0 mb-6 border border-notion-border rounded-md overflow-hidden">
+          <div className="px-3 py-3 border-r border-notion-border">
+            <div className="text-xs text-notion-subtle font-medium">Total billed</div>
+            <div className="text-xl font-bold text-notion-text mt-0.5">₹{grandTotal}</div>
+          </div>
+          <div className="px-3 py-3">
+            <div className="text-xs text-notion-subtle font-medium">Meals delivered</div>
+            <div className="text-xl font-bold text-notion-text mt-0.5">{grandMeals}</div>
+          </div>
+        </div>
+      )}
+
       {loading ? (
-        <div className="text-center py-12 text-stone-400 text-sm">Loading...</div>
+        <div className="text-center py-12 text-notion-light text-sm">Loading...</div>
       ) : data.length === 0 ? (
-        <div className="text-center py-16 bg-white/50 rounded-2xl border border-stone-200/50">
-          <div className="text-5xl mb-3">📋</div>
-          <div className="text-stone-600 font-medium">No data for this month.</div>
+        <div className="text-center py-16 border border-dashed border-notion-border rounded-md">
+          <div className="text-3xl mb-2">📋</div>
+          <div className="text-notion-text font-medium">No data for this month</div>
         </div>
       ) : (
-        <div className="space-y-3">
-          {data.map(person => {
-            const hasMeals = Object.values(person.counts).some(c => c > 0)
-            const isMe = person.id === profileId
-            return (
-              <div
-                key={person.id}
-                className={`rounded-2xl shadow-sm overflow-hidden transition-shadow hover:shadow-md ${
-                  isMe ? 'bg-white border-2 border-orange-200' : 'bg-white border border-stone-200/70'
-                }`}
-              >
-                <div className="flex items-center justify-between px-4 py-3 border-b border-stone-100">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-orange-400 to-rose-400 text-white flex items-center justify-center font-bold text-sm shadow-sm">
-                      {person.name.charAt(0).toUpperCase()}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-stone-900">{person.name}</span>
-                      {isMe && <span className="text-[10px] font-bold px-1.5 py-0.5 bg-orange-500 text-white rounded-full">YOU</span>}
-                    </div>
-                  </div>
-                  <span className={`text-xl font-bold tracking-tight ${hasMeals ? 'text-orange-600' : 'text-stone-300'}`}>
-                    ₹{person.total}
-                  </span>
-                </div>
-                <div className="px-3 py-3 grid grid-cols-3 gap-2">
-                  {['breakfast', 'lunch', 'dinner'].map(meal => {
-                    if (!person[meal]) return null
-                    const count = person.counts[meal] || 0
-                    return (
-                      <div key={meal} className="bg-stone-50/60 rounded-xl p-2 text-center">
-                        <div className="text-[10px] text-stone-400 font-semibold uppercase tracking-wide mb-0.5">
-                          {MEAL_ICONS[meal]} {meal.slice(0, 3)}
-                        </div>
-                        <div className="font-bold text-stone-800">{count}×</div>
-                        <div className="text-[11px] text-stone-500">₹{count * MEAL_PRICES[meal]}</div>
+        <div>
+          <div className="divide-y divide-notion-border border border-notion-border rounded-md overflow-hidden">
+            {data.map(person => {
+              const hasMeals = Object.values(person.counts).some(c => c > 0)
+              const isMe = person.id === profileId
+              return (
+                <div key={person.id} className="bg-white hover:bg-notion-bgSoft">
+                  <div className="flex items-center justify-between px-3 py-2.5">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div className="w-7 h-7 rounded-full bg-notion-orangeBg text-notion-orange flex items-center justify-center font-semibold text-xs shrink-0">
+                        {person.name.charAt(0).toUpperCase()}
                       </div>
-                    )
-                  })}
+                      <span className="font-medium text-notion-text truncate">{person.name}</span>
+                      {isMe && (
+                        <span className="text-[10px] font-semibold px-1.5 py-0.5 bg-notion-blueBg text-notion-blue rounded">
+                          You
+                        </span>
+                      )}
+                    </div>
+                    <span className={`text-base font-semibold tracking-tight ${hasMeals ? 'text-notion-text' : 'text-notion-light'}`}>
+                      ₹{person.total}
+                    </span>
+                  </div>
+                  <div className="px-3 pb-3 flex gap-1.5">
+                    {['breakfast', 'lunch', 'dinner'].map(meal => {
+                      if (!person[meal]) return null
+                      const count = person.counts[meal] || 0
+                      return (
+                        <div key={meal} className="flex-1 bg-notion-bgSoft border border-notion-border rounded px-2 py-1.5 flex items-center justify-between">
+                          <span className="text-xs text-notion-subtle">
+                            {MEAL_ICONS[meal]} {meal.slice(0, 1).toUpperCase() + meal.slice(1, 3)}
+                          </span>
+                          <span className="text-xs font-semibold text-notion-text">
+                            {count}× · ₹{count * MEAL_PRICES[meal]}
+                          </span>
+                        </div>
+                      )
+                    })}
+                  </div>
                 </div>
-              </div>
-            )
-          })}
+              )
+            })}
+          </div>
 
-          <div className="bg-gradient-to-br from-stone-900 to-stone-800 rounded-2xl px-4 py-4 flex items-center justify-between shadow-lg mt-4">
+          <div className="mt-4 border border-notion-border rounded-md px-4 py-3 flex items-center justify-between bg-notion-bgSoft">
             <div>
-              <div className="text-white font-bold text-lg">Grand Total</div>
-              <div className="text-stone-400 text-xs">{grandMeals} meals · {data.length} people</div>
+              <div className="font-semibold text-notion-text">Grand total</div>
+              <div className="text-xs text-notion-subtle">{grandMeals} meals · {data.length} people</div>
             </div>
-            <div className="text-3xl font-bold text-orange-400 tracking-tight">₹{grandTotal}</div>
+            <div className="text-2xl font-bold text-notion-text tracking-tight">₹{grandTotal}</div>
           </div>
         </div>
       )}

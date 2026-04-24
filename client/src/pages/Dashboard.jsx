@@ -9,13 +9,12 @@ const MEAL_PRICES = { breakfast: 30, lunch: 60, dinner: 30 }
 const STATUS_CYCLE = { pending: 'delivered', delivered: 'skipped', skipped: 'pending' }
 
 const STATUS_STYLE = {
-  pending:   'bg-stone-50 text-stone-500 border-stone-200 hover:border-stone-300',
-  delivered: 'bg-emerald-50 text-emerald-700 border-emerald-300 hover:border-emerald-400',
-  skipped:   'bg-rose-50 text-rose-600 border-rose-200 hover:border-rose-300'
+  pending:   'bg-notion-bgSoft text-notion-subtle border-notion-border hover:bg-notion-hover',
+  delivered: 'bg-notion-greenBg text-notion-green border-transparent',
+  skipped:   'bg-notion-redBg text-notion-red border-transparent'
 }
-const STATUS_LABEL = { pending: 'Pending', delivered: '✓ Done', skipped: '✗ Skipped' }
+const STATUS_LABEL = { pending: 'Pending', delivered: 'Delivered', skipped: 'Skipped' }
 
-// Local-date helpers (avoid toISOString UTC shift)
 function toDateStr(date) {
   const y = date.getFullYear()
   const m = String(date.getMonth() + 1).padStart(2, '0')
@@ -107,20 +106,20 @@ export default function Dashboard() {
   return (
     <div>
       {/* Date nav */}
-      <div className="flex items-center justify-between mb-4 bg-white/70 rounded-2xl border border-stone-200/60 shadow-sm px-2 py-2">
+      <div className="flex items-center justify-between mb-5">
         <button
           onClick={() => shiftDate(-1)}
-          className="w-10 h-10 rounded-xl hover:bg-stone-100 text-stone-600 text-xl flex items-center justify-center"
+          className="w-8 h-8 rounded-md hover:bg-notion-hover text-notion-subtle flex items-center justify-center"
         >
           ←
         </button>
         <div className="text-center">
-          <div className="text-lg font-bold text-stone-900 tracking-tight">{formatDisplay(dateStr)}</div>
-          <div className="text-xs text-stone-400 font-medium">{dateStr}</div>
+          <h1 className="text-2xl font-bold text-notion-text tracking-tight">{formatDisplay(dateStr)}</h1>
+          <div className="text-xs text-notion-light mt-0.5">{dateStr}</div>
         </div>
         <button
           onClick={() => shiftDate(1)}
-          className="w-10 h-10 rounded-xl hover:bg-stone-100 text-stone-600 text-xl flex items-center justify-center"
+          className="w-8 h-8 rounded-md hover:bg-notion-hover text-notion-subtle flex items-center justify-center"
         >
           →
         </button>
@@ -129,27 +128,27 @@ export default function Dashboard() {
       {!isToday && (
         <button
           onClick={() => setDateStr(toDateStr(new Date()))}
-          className="w-full mb-4 py-2 text-sm font-medium text-orange-700 bg-orange-50/70 border border-orange-200 rounded-xl hover:bg-orange-100"
+          className="w-full mb-4 py-1.5 text-sm text-notion-blue hover:bg-notion-blueBg rounded-md font-medium"
         >
-          Jump to Today
+          Jump to today
         </button>
       )}
 
       {/* View toggle */}
       {!loading && people.length > 0 && (
-        <div className="flex bg-stone-100/80 rounded-2xl p-1 mb-4">
+        <div className="inline-flex bg-notion-bgSoft border border-notion-border rounded-md p-0.5 mb-5">
           <button
             onClick={() => setViewMode('mine')}
-            className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-all ${
-              viewMode === 'mine' ? 'bg-white shadow-sm text-stone-900' : 'text-stone-500'
+            className={`px-3 py-1 rounded text-sm font-medium ${
+              viewMode === 'mine' ? 'bg-white text-notion-text shadow-sm' : 'text-notion-subtle hover:text-notion-text'
             }`}
           >
-            My Meals
+            My meals
           </button>
           <button
             onClick={() => setViewMode('all')}
-            className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-all ${
-              viewMode === 'all' ? 'bg-white shadow-sm text-stone-900' : 'text-stone-500'
+            className={`px-3 py-1 rounded text-sm font-medium ${
+              viewMode === 'all' ? 'bg-white text-notion-text shadow-sm' : 'text-notion-subtle hover:text-notion-text'
             }`}
           >
             Everyone
@@ -159,45 +158,44 @@ export default function Dashboard() {
 
       {/* Summary */}
       {!loading && visiblePeople.length > 0 && (
-        <div className="grid grid-cols-3 gap-2 mb-5">
-          <div className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200/50 rounded-2xl p-3 text-center">
-            <div className="text-2xl font-bold text-emerald-700 tracking-tight">{totalDelivered}</div>
-            <div className="text-[11px] text-emerald-600/80 font-medium uppercase tracking-wide">Delivered</div>
+        <div className="grid grid-cols-3 gap-0 mb-6 border border-notion-border rounded-md overflow-hidden">
+          <div className="px-3 py-3 border-r border-notion-border">
+            <div className="text-xs text-notion-subtle font-medium">Delivered</div>
+            <div className="text-xl font-bold text-notion-text mt-0.5">{totalDelivered}</div>
           </div>
-          <div className="bg-gradient-to-br from-stone-50 to-stone-100/50 border border-stone-200/50 rounded-2xl p-3 text-center">
-            <div className="text-2xl font-bold text-stone-600 tracking-tight">{totalPending}</div>
-            <div className="text-[11px] text-stone-500 font-medium uppercase tracking-wide">Pending</div>
+          <div className="px-3 py-3 border-r border-notion-border">
+            <div className="text-xs text-notion-subtle font-medium">Pending</div>
+            <div className="text-xl font-bold text-notion-text mt-0.5">{totalPending}</div>
           </div>
-          <div className="bg-gradient-to-br from-orange-50 to-rose-100/50 border border-orange-200/50 rounded-2xl p-3 text-center">
-            <div className="text-2xl font-bold text-orange-700 tracking-tight">₹{totalCost}</div>
-            <div className="text-[11px] text-orange-600/80 font-medium uppercase tracking-wide">
-              {viewMode === 'mine' ? 'Your cost' : 'Total'}
+          <div className="px-3 py-3">
+            <div className="text-xs text-notion-subtle font-medium">
+              {viewMode === 'mine' ? 'Your cost' : 'Total cost'}
             </div>
+            <div className="text-xl font-bold text-notion-text mt-0.5">₹{totalCost}</div>
           </div>
         </div>
       )}
 
-      {/* Content */}
       {loading ? (
-        <div className="text-center py-12 text-stone-400 text-sm">Loading...</div>
+        <div className="text-center py-12 text-notion-light text-sm">Loading...</div>
       ) : people.length === 0 ? (
-        <div className="text-center py-16 bg-white/50 rounded-2xl border border-stone-200/50">
-          <div className="text-5xl mb-3">👥</div>
-          <div className="text-stone-600 font-medium">No people added yet.</div>
-          <div className="text-sm text-stone-400 mt-1">Head to the People tab to add roommates.</div>
+        <div className="text-center py-16 border border-dashed border-notion-border rounded-md">
+          <div className="text-3xl mb-2">👥</div>
+          <div className="text-notion-text font-medium">No people added yet</div>
+          <div className="text-sm text-notion-subtle mt-1">Head to the People tab to add roommates.</div>
         </div>
       ) : visiblePeople.length === 0 ? (
-        <div className="text-center py-12 bg-white/50 rounded-2xl border border-stone-200/50">
-          <div className="text-stone-500">Your profile wasn't found.</div>
+        <div className="text-center py-12 border border-dashed border-notion-border rounded-md">
+          <div className="text-notion-text">Your profile wasn't found.</div>
           <button
             onClick={() => setViewMode('all')}
-            className="mt-3 text-sm text-orange-600 font-medium hover:underline"
+            className="mt-2 text-sm text-notion-blue font-medium hover:underline"
           >
-            Show everyone instead
+            Show everyone
           </button>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="divide-y divide-notion-border border border-notion-border rounded-md overflow-hidden">
           {visiblePeople.map(person => {
             const allDone = Object.values(person.meals).every(s => s === 'delivered')
             const personCost = Object.entries(person.meals)
@@ -206,50 +204,45 @@ export default function Dashboard() {
             const isMe = person.id === profileId
 
             return (
-              <div
-                key={person.id}
-                className={`rounded-2xl shadow-sm overflow-hidden transition-shadow hover:shadow-md ${
-                  isMe ? 'bg-white border-2 border-orange-200' : 'bg-white border border-stone-200/70'
-                }`}
-              >
-                <div className="flex items-center justify-between px-4 py-3 border-b border-stone-100">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-orange-400 to-rose-400 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+              <div key={person.id} className="bg-white hover:bg-notion-bgSoft">
+                <div className="flex items-center justify-between px-3 py-2.5">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <div className="w-7 h-7 rounded-full bg-notion-orangeBg text-notion-orange flex items-center justify-center font-semibold text-xs shrink-0">
                       {person.name.charAt(0).toUpperCase()}
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-stone-900">{person.name}</span>
-                      {isMe && <span className="text-[10px] font-bold px-1.5 py-0.5 bg-orange-500 text-white rounded-full">YOU</span>}
-                    </div>
+                    <span className="font-medium text-notion-text truncate">{person.name}</span>
+                    {isMe && (
+                      <span className="text-[10px] font-semibold px-1.5 py-0.5 bg-notion-blueBg text-notion-blue rounded">
+                        You
+                      </span>
+                    )}
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 shrink-0">
                     {personCost > 0 && (
-                      <span className="text-sm font-bold text-orange-600">₹{personCost}</span>
+                      <span className="text-sm font-semibold text-notion-text">₹{personCost}</span>
                     )}
                     {!allDone && !isFuture && (
                       <button
                         onClick={() => markAllDelivered(person.id)}
-                        className="text-[11px] font-bold px-2.5 py-1 bg-emerald-100 text-emerald-700 rounded-lg hover:bg-emerald-200"
+                        className="text-[11px] font-medium px-2 py-1 text-notion-subtle hover:text-notion-green hover:bg-notion-greenBg rounded"
                       >
-                        All Done
+                        All done
                       </button>
                     )}
                   </div>
                 </div>
-                <div className="px-3 py-3 flex gap-2 flex-wrap">
+                <div className="px-3 pb-3 flex gap-1.5 flex-wrap">
                   {['breakfast', 'lunch', 'dinner'].filter(m => person.meals.hasOwnProperty(m)).map(meal => {
                     const status = person.meals[meal]
                     return (
                       <button
                         key={meal}
                         onClick={() => toggleMeal(person.id, meal, status)}
-                        className={`flex-1 flex flex-col items-center gap-0.5 px-3 py-2.5 rounded-xl border-2 font-medium ${STATUS_STYLE[status]}`}
+                        className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-md border text-sm font-medium ${STATUS_STYLE[status]}`}
                       >
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-base">{MEAL_ICONS[meal]}</span>
-                          <span className="text-sm">{MEAL_LABELS[meal]}</span>
-                        </div>
-                        <span className="text-[11px] font-bold opacity-80">{STATUS_LABEL[status]}</span>
+                        <span>{MEAL_ICONS[meal]}</span>
+                        <span className="text-xs">{MEAL_LABELS[meal]}</span>
+                        <span className="text-[11px] opacity-80">· {STATUS_LABEL[status]}</span>
                       </button>
                     )
                   })}

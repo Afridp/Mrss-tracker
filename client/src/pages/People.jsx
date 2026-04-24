@@ -2,19 +2,19 @@ import React, { useState, useEffect } from 'react'
 import { getPeople, addPerson, updatePerson, deletePerson } from '../api'
 import { useProfile } from '../ProfileContext'
 
-const PLAN_LABELS = { breakfast: 'B', lunch: 'L', dinner: 'D' }
-const PLAN_COLORS = {
-  breakfast: 'bg-amber-100 text-amber-700',
-  lunch:     'bg-sky-100 text-sky-700',
-  dinner:    'bg-indigo-100 text-indigo-700'
+const PLAN_STYLES = {
+  breakfast: 'bg-notion-yellowBg text-notion-yellow',
+  lunch:     'bg-notion-blueBg text-notion-blue',
+  dinner:    'bg-notion-purpleBg text-notion-purple'
 }
+const PLAN_LABELS = { breakfast: 'B', lunch: 'L', dinner: 'D' }
 
 function PlanBadges({ person }) {
   return (
-    <div className="flex gap-1">
+    <div className="flex gap-0.5">
       {['breakfast', 'lunch', 'dinner'].map(m =>
         person[m] ? (
-          <span key={m} className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${PLAN_COLORS[m]}`}>
+          <span key={m} className={`text-[10px] font-semibold w-5 h-5 rounded flex items-center justify-center ${PLAN_STYLES[m]}`}>
             {PLAN_LABELS[m]}
           </span>
         ) : null
@@ -40,9 +40,7 @@ function PersonForm({ initial, onSave, onCancel, saving }) {
     dinner:    !!initial?.dinner
   })
 
-  function toggle(m) {
-    setMeals(prev => ({ ...prev, [m]: !prev[m] }))
-  }
+  function toggle(m) { setMeals(prev => ({ ...prev, [m]: !prev[m] })) }
 
   function submit(e) {
     e.preventDefault()
@@ -53,18 +51,18 @@ function PersonForm({ initial, onSave, onCancel, saving }) {
   return (
     <form onSubmit={submit} className="space-y-3">
       <div>
-        <label className="block text-xs font-semibold text-stone-500 uppercase tracking-wide mb-1">Name</label>
+        <label className="block text-xs font-semibold text-notion-subtle mb-1">Name</label>
         <input
           value={name}
           onChange={e => setName(e.target.value)}
           placeholder="Roommate's name"
-          className="w-full border border-stone-300 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400"
+          className="w-full border border-notion-border rounded-md px-3 py-2 text-sm focus:border-notion-blue focus:ring-1 focus:ring-notion-blue"
           required
         />
       </div>
       <div>
-        <label className="block text-xs font-semibold text-stone-500 uppercase tracking-wide mb-2">Meal Plan</label>
-        <div className="flex gap-2">
+        <label className="block text-xs font-semibold text-notion-subtle mb-1.5">Meal plan</label>
+        <div className="flex gap-1.5">
           {[
             { key: 'breakfast', icon: '☀️', label: 'Breakfast', price: '₹30' },
             { key: 'lunch',     icon: '🌤️', label: 'Lunch',     price: '₹60' },
@@ -77,25 +75,24 @@ function PersonForm({ initial, onSave, onCancel, saving }) {
                 onChange={() => toggle(key)}
                 className="sr-only"
               />
-              <div className={`border-2 rounded-xl p-2 text-center ${
-                meals[key] ? 'border-orange-400 bg-orange-50' : 'border-stone-200 bg-white'
+              <div className={`border rounded-md p-2 text-center ${
+                meals[key]
+                  ? 'border-notion-blue bg-notion-blueBg/40'
+                  : 'border-notion-border bg-white hover:bg-notion-bgSoft'
               }`}>
-                <div className="text-xl">{icon}</div>
-                <div className="text-xs font-semibold text-stone-700">{label}</div>
-                <div className="text-[10px] text-stone-400">{price}</div>
+                <div className="text-base">{icon}</div>
+                <div className="text-xs font-medium text-notion-text">{label}</div>
+                <div className="text-[10px] text-notion-subtle">{price}</div>
               </div>
             </label>
           ))}
         </div>
-        {!meals.breakfast && !meals.lunch && !meals.dinner && (
-          <p className="text-xs text-rose-500 mt-1">Select at least one meal</p>
-        )}
       </div>
       <div className="flex gap-2 pt-1">
         <button
           type="submit"
           disabled={saving || !name.trim() || (!meals.breakfast && !meals.lunch && !meals.dinner)}
-          className="flex-1 py-2.5 bg-gradient-to-br from-orange-500 to-rose-500 text-white rounded-xl text-sm font-semibold hover:shadow-lg disabled:opacity-50 shadow"
+          className="flex-1 py-2 bg-notion-blue text-white rounded-md text-sm font-medium hover:opacity-90 disabled:opacity-50"
         >
           {saving ? 'Saving...' : 'Save'}
         </button>
@@ -103,7 +100,7 @@ function PersonForm({ initial, onSave, onCancel, saving }) {
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 py-2.5 bg-stone-100 text-stone-700 rounded-xl text-sm font-semibold hover:bg-stone-200"
+            className="flex-1 py-2 bg-white text-notion-text border border-notion-border rounded-md text-sm font-medium hover:bg-notion-hover"
           >
             Cancel
           </button>
@@ -152,56 +149,52 @@ export default function People() {
     setDeleteConfirm(null)
   }
 
-  if (loading) return <div className="text-center py-12 text-stone-400 text-sm">Loading...</div>
+  if (loading) return <div className="text-center py-12 text-notion-light text-sm">Loading...</div>
 
   return (
     <div>
       <div className="flex items-center justify-between mb-5">
-        <h2 className="text-xl font-extrabold text-stone-900 tracking-tight">
-          Roommates <span className="text-stone-400 font-medium">({people.length})</span>
-        </h2>
+        <div>
+          <h1 className="text-2xl font-bold text-notion-text tracking-tight">Roommates</h1>
+          <div className="text-xs text-notion-light mt-0.5">{people.length} {people.length === 1 ? 'person' : 'people'}</div>
+        </div>
         {!showAdd && (
           <button
             onClick={() => setShowAdd(true)}
-            className="px-3 py-2 bg-gradient-to-br from-orange-500 to-rose-500 text-white rounded-xl text-sm font-semibold hover:shadow-lg shadow"
+            className="px-3 py-1.5 bg-notion-blue text-white rounded-md text-sm font-medium hover:opacity-90"
           >
-            + Add Person
+            + Add person
           </button>
         )}
       </div>
 
       {showAdd && (
-        <div className="bg-white border border-orange-200 rounded-2xl p-4 mb-4 shadow-sm">
-          <h3 className="font-bold text-stone-900 mb-3">New Roommate</h3>
+        <div className="bg-white border border-notion-border rounded-md p-4 mb-4">
+          <h3 className="font-semibold text-notion-text mb-3">New roommate</h3>
           <PersonForm onSave={handleAdd} onCancel={() => setShowAdd(false)} saving={saving} />
         </div>
       )}
 
       {people.length === 0 && !showAdd ? (
-        <div className="text-center py-12 bg-white/50 rounded-2xl border border-stone-200/50">
-          <div className="text-5xl mb-3">👤</div>
-          <div className="text-stone-600 font-medium">No roommates added yet.</div>
+        <div className="text-center py-16 border border-dashed border-notion-border rounded-md">
+          <div className="text-3xl mb-2">👤</div>
+          <div className="text-notion-text font-medium">No roommates yet</div>
           <button
             onClick={() => setShowAdd(true)}
-            className="mt-3 px-4 py-2 bg-gradient-to-br from-orange-500 to-rose-500 text-white rounded-xl text-sm font-semibold shadow hover:shadow-lg"
+            className="mt-3 px-3 py-1.5 bg-notion-blue text-white rounded-md text-sm font-medium hover:opacity-90"
           >
-            Add First Person
+            Add first person
           </button>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="divide-y divide-notion-border border border-notion-border rounded-md overflow-hidden">
           {people.map(person => {
             const isMe = person.id === profileId
             return (
-              <div
-                key={person.id}
-                className={`rounded-2xl shadow-sm overflow-hidden ${
-                  isMe ? 'bg-white border-2 border-orange-200' : 'bg-white border border-stone-200/70'
-                }`}
-              >
+              <div key={person.id} className="bg-white">
                 {editId === person.id ? (
                   <div className="p-4">
-                    <h3 className="font-bold text-stone-900 mb-3">Edit {person.name}</h3>
+                    <h3 className="font-semibold text-notion-text mb-3">Edit {person.name}</h3>
                     <PersonForm
                       initial={person}
                       onSave={(data) => handleEdit(person.id, data)}
@@ -210,51 +203,55 @@ export default function People() {
                     />
                   </div>
                 ) : deleteConfirm === person.id ? (
-                  <div className="p-4 bg-rose-50">
-                    <p className="text-sm text-rose-700 mb-3">
+                  <div className="p-4 bg-notion-redBg/40">
+                    <p className="text-sm text-notion-text mb-3">
                       Delete <strong>{person.name}</strong>? This removes all their meal history.
                     </p>
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleDelete(person.id)}
-                        className="flex-1 py-2 bg-rose-500 text-white rounded-xl text-sm font-semibold hover:bg-rose-600"
+                        className="flex-1 py-2 bg-notion-red text-white rounded-md text-sm font-medium hover:opacity-90"
                       >
-                        Yes, Delete
+                        Delete
                       </button>
                       <button
                         onClick={() => setDeleteConfirm(null)}
-                        className="flex-1 py-2 bg-white text-stone-700 rounded-xl text-sm font-semibold hover:bg-stone-50 border border-stone-200"
+                        className="flex-1 py-2 bg-white text-notion-text border border-notion-border rounded-md text-sm font-medium hover:bg-notion-hover"
                       >
                         Cancel
                       </button>
                     </div>
                   </div>
                 ) : (
-                  <div className="flex items-center justify-between px-4 py-3">
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-11 h-11 rounded-full bg-gradient-to-br from-orange-400 to-rose-400 text-white flex items-center justify-center font-bold shadow-sm shrink-0">
+                  <div className="flex items-center justify-between px-3 py-2.5 hover:bg-notion-bgSoft group">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-8 h-8 rounded-full bg-notion-orangeBg text-notion-orange flex items-center justify-center font-semibold text-sm shrink-0">
                         {person.name.charAt(0).toUpperCase()}
                       </div>
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="font-bold text-stone-900 truncate">{person.name}</span>
-                          {isMe && <span className="text-[10px] font-bold px-1.5 py-0.5 bg-orange-500 text-white rounded-full shrink-0">YOU</span>}
+                          <span className="font-medium text-notion-text truncate">{person.name}</span>
+                          {isMe && (
+                            <span className="text-[10px] font-semibold px-1.5 py-0.5 bg-notion-blueBg text-notion-blue rounded shrink-0">
+                              You
+                            </span>
+                          )}
                         </div>
-                        <div className="text-xs text-stone-400 font-medium mt-0.5 truncate">{planDesc(person)}</div>
+                        <div className="text-xs text-notion-subtle truncate">{planDesc(person)}</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 shrink-0 ml-2">
                       <PlanBadges person={person} />
                       <button
                         onClick={() => setEditId(person.id)}
-                        className="w-8 h-8 text-stone-400 hover:text-stone-700 hover:bg-stone-100 rounded-lg flex items-center justify-center"
+                        className="w-7 h-7 text-notion-light hover:text-notion-text hover:bg-notion-hover rounded flex items-center justify-center opacity-0 group-hover:opacity-100"
                         title="Edit"
                       >
                         ✏️
                       </button>
                       <button
                         onClick={() => setDeleteConfirm(person.id)}
-                        className="w-8 h-8 text-stone-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg flex items-center justify-center"
+                        className="w-7 h-7 text-notion-light hover:text-notion-red hover:bg-notion-redBg/60 rounded flex items-center justify-center opacity-0 group-hover:opacity-100"
                         title="Delete"
                       >
                         🗑️
