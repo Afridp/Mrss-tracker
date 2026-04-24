@@ -5,14 +5,15 @@ module.exports = {
     extend: {
       colors: {
         notion: {
-          text:     '#37352f',
-          subtle:   '#787774',
+          text:     '#2a2a27',
+          subtle:   '#6b6b68',
           light:    '#9b9a97',
           bg:       '#ffffff',
-          bgSoft:   '#f7f7f5',
-          hover:    '#f1f1ef',
-          hoverMid: '#e9e9e7',
-          border:   '#e9e9e7',
+          bgSoft:   '#ebeae4',
+          page:     '#d3d2cd',
+          hover:    '#ebeae4',
+          hoverMid: '#dedcd4',
+          border:   '#c7c6bf',
           blue:     '#2383e2',
           blueBg:   '#d3e5ef',
           green:    '#448361',
