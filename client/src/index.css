@@ -1,8 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-gray-50 text-gray-800 min-h-screen;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+html, body {
+  @apply min-h-screen;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #1c1917;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+body {
+  background:
+    radial-gradient(ellipse 60% 40% at 50% -10%, rgba(251, 146, 60, 0.18), transparent 70%),
+    radial-gradient(ellipse 50% 30% at 20% 110%, rgba(244, 114, 182, 0.10), transparent 70%),
+    linear-gradient(180deg, #fef7ed 0%, #fafaf9 100%);
+  background-attachment: fixed;
+}
+
+html { scroll-behavior: smooth; }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.22); }
+
+.glass {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+button { transition: all 180ms cubic-bezier(0.2, 0.8, 0.2, 1); }

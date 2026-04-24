@@ -10,35 +10,38 @@ function Navbar() {
   const { profile, setProfileId } = useProfile()
 
   const linkClass = ({ isActive }) =>
-    `px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-      isActive ? 'bg-orange-500 text-white' : 'text-gray-600 hover:bg-gray-100'
+    `flex-1 text-center px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+      isActive
+        ? 'bg-white shadow-sm text-orange-600'
+        : 'text-stone-500 hover:text-stone-900'
     }`
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
-      <div className="max-w-2xl mx-auto px-4 py-2 flex items-center justify-between">
+    <header className="sticky top-0 z-20 glass border-b border-stone-200/50">
+      <div className="max-w-2xl mx-auto px-4 pt-3 pb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-2xl">🍱</span>
-          <span className="font-bold text-gray-800 text-lg">Mess Tracker</span>
+          <span className="font-bold text-stone-900 text-lg tracking-tight">Mess Tracker</span>
         </div>
         {profile && (
           <button
             onClick={() => setProfileId(null)}
             title="Switch profile"
-            className="flex items-center gap-1.5 px-2 py-1 bg-orange-50 hover:bg-orange-100 border border-orange-200 rounded-full text-sm"
+            className="flex items-center gap-2 pl-1 pr-3 py-1 bg-white/80 hover:bg-white border border-stone-200 rounded-full shadow-sm hover:shadow"
           >
-            <div className="w-6 h-6 rounded-full bg-orange-400 text-white flex items-center justify-center font-bold text-xs">
+            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-orange-400 to-rose-400 text-white flex items-center justify-center font-bold text-xs shadow-sm">
               {profile.name.charAt(0).toUpperCase()}
             </div>
-            <span className="text-orange-700 font-medium">{profile.name}</span>
-            <span className="text-orange-400 text-xs">⇄</span>
+            <span className="text-stone-800 font-medium text-sm">{profile.name}</span>
           </button>
         )}
       </div>
-      <div className="max-w-2xl mx-auto px-4 pb-2 flex gap-1">
-        <NavLink to="/" className={linkClass}>Today</NavLink>
-        <NavLink to="/people" className={linkClass}>People</NavLink>
-        <NavLink to="/billing" className={linkClass}>Billing</NavLink>
+      <div className="max-w-2xl mx-auto px-3 pb-3">
+        <div className="flex gap-1 bg-stone-100/80 rounded-2xl p-1">
+          <NavLink to="/" className={linkClass}>Today</NavLink>
+          <NavLink to="/people" className={linkClass}>People</NavLink>
+          <NavLink to="/billing" className={linkClass}>Billing</NavLink>
+        </div>
       </div>
     </header>
   )
@@ -48,7 +51,11 @@ export default function App() {
   const { profileId, checking } = useProfile()
 
   if (checking) {
-    return <div className="min-h-screen flex items-center justify-center text-gray-400">Loading...</div>
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-stone-400 text-sm">Loading...</div>
+      </div>
+    )
   }
 
   if (!profileId) {
@@ -56,9 +63,9 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <Navbar />
-      <main className="max-w-2xl mx-auto px-4 py-6">
+      <main className="max-w-2xl mx-auto px-4 py-6 pb-20">
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/people" element={<People />} />
