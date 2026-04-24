@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { getBilling } from '../api'
+import { useProfile } from '../ProfileContext'
 
 const MEAL_PRICES = { breakfast: 30, lunch: 60, dinner: 30 }
 
@@ -13,6 +14,7 @@ function monthDisplay(str) {
 }
 
 export default function Billing() {
+  const { profileId } = useProfile()
   const [month, setMonth] = useState(toMonthStr(new Date()))
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
@@ -92,14 +94,25 @@ export default function Billing() {
         <div className="space-y-3">
           {data.map(person => {
             const hasMeals = Object.values(person.counts).some(c => c > 0)
+            const isMe = person.id === profileId
             return (
-              <div key={person.id} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+              <div
+                key={person.id}
+                className={`rounded-xl shadow-sm overflow-hidden ${
+                  isMe
+                    ? 'bg-orange-50 border-2 border-orange-300'
+                    : 'bg-white border border-gray-200'
+                }`}
+              >
                 <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-sm">
                       {person.name.charAt(0).toUpperCase()}
                     </div>
                     <span className="font-semibold text-gray-800">{person.name}</span>
+                    {isMe && (
+                      <span className="text-xs font-bold px-2 py-0.5 bg-orange-500 text-white rounded-full">You</span>
+                    )}
                   </div>
                   <span className={`text-lg font-bold ${hasMeals ? 'text-orange-600' : 'text-gray-300'}`}>
                     ₹{person.total}

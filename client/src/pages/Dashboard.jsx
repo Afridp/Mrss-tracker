@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { getMeals, updateMeal, bulkUpdateMeals } from '../api'
+import { useProfile } from '../ProfileContext'
 
 const MEALS = ['breakfast', 'lunch', 'dinner']
 const MEAL_LABELS = { breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner' }
@@ -29,9 +30,11 @@ function formatDisplay(dateStr) {
 }
 
 export default function Dashboard() {
+  const { profileId } = useProfile()
   const [dateStr, setDateStr] = useState(toDateStr(new Date()))
   const [people, setPeople] = useState([])
   const [loading, setLoading] = useState(true)
+  const [viewMode, setViewMode] = useState('mine') // 'mine' | 'all'
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -76,9 +79,13 @@ export default function Dashboard() {
   const isToday = dateStr === toDateStr(new Date())
   const isFuture = dateStr > toDateStr(new Date())
 
-  const totalDelivered = people.reduce((sum, p) =>
+  const visiblePeople = viewMode === 'mine'
+    ? people.filter(p => p.id === profileId)
+    : people
+
+  const totalDelivered = visiblePeople.reduce((sum, p) =>
     sum + Object.values(p.meals).filter(s => s === 'delivered').length, 0)
-  const totalPending = people.reduce((sum, p) =>
+  const totalPending = visiblePeople.reduce((sum, p) =>
     sum + Object.values(p.meals).filter(s => s === 'pending').length, 0)
 
   return (
@@ -112,8 +119,30 @@ export default function Dashboard() {
         </button>
       )}
 
-      {/* Summary bar */}
+      {/* View mode toggle */}
       {!loading && people.length > 0 && (
+        <div className="flex bg-gray-100 rounded-lg p-1 mb-4">
+          <button
+            onClick={() => setViewMode('mine')}
+            className={`flex-1 py-1.5 rounded-md text-sm font-medium transition ${
+              viewMode === 'mine' ? 'bg-white shadow-sm text-gray-800' : 'text-gray-500'
+            }`}
+          >
+            My Meals
+          </button>
+          <button
+            onClick={() => setViewMode('all')}
+            className={`flex-1 py-1.5 rounded-md text-sm font-medium transition ${
+              viewMode === 'all' ? 'bg-white shadow-sm text-gray-800' : 'text-gray-500'
+            }`}
+          >
+            Everyone
+          </button>
+        </div>
+      )}
+
+      {/* Summary bar */}
+      {!loading && visiblePeople.length > 0 && (
         <div className="flex gap-3 mb-5">
           <div className="flex-1 bg-green-50 border border-green-200 rounded-lg px-3 py-2 text-center">
             <div className="text-xl font-bold text-green-700">{totalDelivered}</div>
@@ -125,12 +154,14 @@ export default function Dashboard() {
           </div>
           <div className="flex-1 bg-orange-50 border border-orange-200 rounded-lg px-3 py-2 text-center">
             <div className="text-xl font-bold text-orange-600">
-              ₹{people.reduce((sum, p) =>
+              ₹{visiblePeople.reduce((sum, p) =>
                 sum + Object.entries(p.meals)
                   .filter(([, s]) => s === 'delivered')
                   .reduce((s, [m]) => s + (MEAL_PRICES[m] || 0), 0), 0)}
             </div>
-            <div className="text-xs text-orange-500">Today's cost</div>
+            <div className="text-xs text-orange-500">
+              {viewMode === 'mine' ? 'Your cost' : "Today's cost"}
+            </div>
           </div>
         </div>
       )}
@@ -143,9 +174,19 @@ export default function Dashboard() {
           <div className="text-gray-500">No people added yet.</div>
           <div className="text-sm text-gray-400 mt-1">Go to People tab to add roommates.</div>
         </div>
+      ) : visiblePeople.length === 0 ? (
+        <div className="text-center py-12">
+          <div className="text-gray-500">Your profile wasn't found.</div>
+          <button
+            onClick={() => setViewMode('all')}
+            className="mt-3 text-sm text-orange-600 hover:underline"
+          >
+            Show everyone instead
+          </button>
+        </div>
       ) : (
         <div className="space-y-3">
-          {people.map(person => {
+          {visiblePeople.map(person => {
             const allDone = Object.values(person.meals).every(s => s === 'delivered')
             const personCost = Object.entries(person.meals)
               .filter(([, s]) => s === 'delivered')
