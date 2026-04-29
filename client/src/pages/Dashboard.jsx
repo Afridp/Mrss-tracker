@@ -9,8 +9,8 @@ const MEAL_PRICES = { breakfast: 30, lunch: 60, dinner: 30 }
 const STATUS_CYCLE = { pending: 'delivered', delivered: 'pending' }
 
 const STATUS_STYLE = {
-  pending:   'bg-notion-bg text-notion-subtle border-notion-border hover:bg-notion-hover',
-  delivered: 'bg-notion-text text-notion-bg border-notion-text'
+  pending:   'bg-notion-bg text-notion-subtle border-2 border-notion-border hover:bg-notion-hover',
+  delivered: 'bg-notion-text text-notion-bg border-2 border-notion-text'
 }
 
 function toDateStr(date) {
@@ -117,7 +117,8 @@ export default function Dashboard() {
         </div>
         <button
           onClick={() => shiftDate(1)}
-          className="w-8 h-8 rounded-md hover:bg-notion-hover text-notion-subtle flex items-center justify-center"
+          disabled={isToday}
+          className="w-8 h-8 rounded-md hover:bg-notion-hover text-notion-subtle flex items-center justify-center disabled:opacity-20 disabled:cursor-not-allowed"
         >
           →
         </button>
@@ -227,18 +228,21 @@ export default function Dashboard() {
                     )}
                   </div>
                 </div>
-                <div className="px-3 pb-3 flex gap-1.5 flex-wrap">
+                <div className="px-3 pb-3 flex gap-2">
                   {['breakfast', 'lunch', 'dinner'].filter(m => person.meals.hasOwnProperty(m)).map(meal => {
                     const status = person.meals[meal]
+                    const done = status === 'delivered'
                     return (
                       <button
                         key={meal}
                         onClick={() => toggleMeal(person.id, meal, status)}
-                        className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-md border text-sm font-medium ${STATUS_STYLE[status]}`}
+                        className={`flex-1 flex flex-col items-center justify-center gap-1 py-4 rounded-2xl active:scale-95 transition-transform ${STATUS_STYLE[status]}`}
                       >
-                        <span className="opacity-70">{MEAL_ICONS[meal]}</span>
-                        <span className="text-xs">{MEAL_LABELS[meal]}</span>
-                        <span className="chip opacity-80">· {status === 'delivered' ? 'Done' : 'Pending'}</span>
+                        <span className="text-2xl leading-none">{MEAL_ICONS[meal]}</span>
+                        <span className="text-[11px] font-semibold mt-0.5">{MEAL_LABELS[meal]}</span>
+                        <span className={`chip text-[9px] ${done ? 'opacity-70' : 'opacity-30'}`}>
+                          {done ? '✓ done' : 'pending'}
+                        </span>
                       </button>
                     )
                   })}
