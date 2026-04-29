@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { getMeals, updateMeal, bulkUpdateMeals } from '../api'
 import { useProfile } from '../ProfileContext'
+import { useAuth } from '../AuthContext'
 
 const MEAL_LABELS = { breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner' }
 const MEAL_ICONS  = { breakfast: '☀', lunch: '◐', dinner: '☾' }
@@ -39,10 +40,11 @@ function formatDisplay(dateStr) {
 
 export default function Dashboard() {
   const { profileId } = useProfile()
+  const { isAdmin } = useAuth()
   const [dateStr, setDateStr] = useState(toDateStr(new Date()))
   const [people, setPeople] = useState([])
   const [loading, setLoading] = useState(true)
-  const [viewMode, setViewMode] = useState('mine')
+  const [viewMode, setViewMode] = useState(isAdmin ? 'all' : 'mine')
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -133,8 +135,8 @@ export default function Dashboard() {
         </button>
       )}
 
-      {/* View toggle */}
-      {!loading && people.length > 0 && (
+      {/* View toggle — admin only */}
+      {isAdmin && !loading && people.length > 0 && (
         <div className="inline-flex bg-notion-bg border border-notion-border rounded-md p-0.5 mb-5">
           <button
             onClick={() => setViewMode('mine')}

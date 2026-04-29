@@ -29,6 +29,7 @@ function planDesc(person) {
 
 function PersonForm({ initial, onSave, onCancel, saving }) {
   const [name, setName] = useState(initial?.name || '')
+  const [email, setEmail] = useState(initial?.email || '')
   const [meals, setMeals] = useState({
     breakfast: !!initial?.breakfast,
     lunch:     !!initial?.lunch,
@@ -39,8 +40,8 @@ function PersonForm({ initial, onSave, onCancel, saving }) {
 
   function submit(e) {
     e.preventDefault()
-    if (!name.trim() || (!meals.breakfast && !meals.lunch && !meals.dinner)) return
-    onSave({ name: name.trim(), ...meals })
+    if (!name.trim() || !email.trim() || (!meals.breakfast && !meals.lunch && !meals.dinner)) return
+    onSave({ name: name.trim(), email: email.trim().toLowerCase(), ...meals })
   }
 
   return (
@@ -51,6 +52,17 @@ function PersonForm({ initial, onSave, onCancel, saving }) {
           value={name}
           onChange={e => setName(e.target.value)}
           placeholder="Roommate's name"
+          className="w-full border border-notion-border rounded-md px-3 py-2 text-sm focus:border-notion-text focus:ring-1 focus:ring-notion-text"
+          required
+        />
+      </div>
+      <div>
+        <label className="label-mono block mb-1">Google Email</label>
+        <input
+          type="email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          placeholder="their.email@gmail.com"
           className="w-full border border-notion-border rounded-md px-3 py-2 text-sm focus:border-notion-text focus:ring-1 focus:ring-notion-text"
           required
         />
@@ -232,7 +244,7 @@ export default function People() {
                             </span>
                           )}
                         </div>
-                        <div className="text-xs text-notion-subtle truncate">{planDesc(person)}</div>
+                        <div className="text-xs text-notion-subtle truncate">{planDesc(person)} · {person.email || <span className="text-notion-light italic">no email</span>}</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 shrink-0 ml-2">
