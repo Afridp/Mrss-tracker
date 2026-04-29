@@ -8,9 +8,12 @@ export function ProfileProvider({ children }) {
   const { user, isAdmin } = useAuth()
   const [profile, setProfile] = useState(null)
   const [checking, setChecking] = useState(true)
+  const [tick, setTick] = useState(0)
+
+  const refetch = () => setTick(t => t + 1)
 
   useEffect(() => {
-    if (user === undefined) return // auth still loading
+    if (user === undefined) return
     if (!user) {
       setProfile(null)
       setChecking(false)
@@ -23,10 +26,10 @@ export function ProfileProvider({ children }) {
       )
       setProfile(match || null)
     }).finally(() => setChecking(false))
-  }, [user])
+  }, [user, tick])
 
   return (
-    <ProfileContext.Provider value={{ profile, profileId: profile?.id || null, checking }}>
+    <ProfileContext.Provider value={{ profile, profileId: profile?.id || null, checking, refetch }}>
       {children}
     </ProfileContext.Provider>
   )

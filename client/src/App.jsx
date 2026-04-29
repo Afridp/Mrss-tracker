@@ -4,36 +4,10 @@ import Dashboard from './pages/Dashboard'
 import People from './pages/People'
 import Billing from './pages/Billing'
 import Login from './pages/Login'
+import SetupProfile from './pages/SetupProfile'
 import { useProfile } from './ProfileContext'
 import { useAuth } from './AuthContext'
 import { useTheme } from './ThemeContext'
-
-function NotRegistered() {
-  const { user, logout } = useAuth()
-  const { theme, toggle } = useTheme()
-  return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 text-center">
-      <button
-        onClick={toggle}
-        className="absolute top-4 right-4 w-8 h-8 rounded-md hover:bg-notion-hover text-notion-subtle flex items-center justify-center"
-      >
-        {theme === 'dark' ? '☀' : '☾'}
-      </button>
-      <div className="w-12 h-12 rounded-md bg-notion-text text-notion-bg flex items-center justify-center chip mb-5">M</div>
-      <h1 className="text-xl font-bold text-notion-text mb-2">Not registered</h1>
-      <p className="text-sm text-notion-subtle mb-1">
-        <span className="font-medium text-notion-text">{user?.email}</span> is not in the system.
-      </p>
-      <p className="text-sm text-notion-subtle mb-8">Ask Afrid to add you in the People tab.</p>
-      <button
-        onClick={logout}
-        className="px-4 py-2 border border-notion-border rounded-md text-sm font-medium text-notion-subtle hover:bg-notion-hover"
-      >
-        Sign out
-      </button>
-    </div>
-  )
-}
 
 function Navbar() {
   const { user, isAdmin, logout } = useAuth()
@@ -134,8 +108,8 @@ export default function App() {
   // Not signed in
   if (!user) return <Login />
 
-  // Signed in but email not in the system (and not admin)
-  if (!isAdmin && !profileId) return <NotRegistered />
+  // Signed in but no profile yet — let them set one up
+  if (!isAdmin && !profileId) return <SetupProfile />
 
   return (
     <div className="min-h-screen">
