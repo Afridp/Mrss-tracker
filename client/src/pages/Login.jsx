@@ -24,8 +24,8 @@ export default function Login() {
     setError('')
     try {
       await signInWithGoogle()
-    } catch {
-      setError('Sign-in failed. Please try again.')
+    } catch (err) {
+      setError(err?.code || err?.message || 'Unknown error')
       setLoading(false)
     }
   }
