@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth'
 import { auth } from './firebase'
 
-const ADMIN_EMAIL = 'afrid@curanova.ai'
+const ADMIN_EMAIL = 'afrids2nd@gmail.com'
 
 const AuthContext = createContext(null)
 
