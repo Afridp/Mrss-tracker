@@ -25,7 +25,7 @@ export default function Login() {
     try {
       await signInWithGoogle()
     } catch (err) {
-      setError(err?.code || err?.message || 'Unknown error')
+      setError(`${err?.code || 'unknown'} — domain: ${window.location.hostname}`)
       setLoading(false)
     }
   }
