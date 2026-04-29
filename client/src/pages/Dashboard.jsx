@@ -230,7 +230,7 @@ export default function Dashboard() {
                     )}
                   </div>
                 </div>
-                <div className="px-3 pb-3 flex gap-2">
+                <div className="px-3 pb-3 flex gap-1.5">
                   {['breakfast', 'lunch', 'dinner'].filter(m => person.meals.hasOwnProperty(m)).map(meal => {
                     const status = person.meals[meal]
                     const done = status === 'delivered'
@@ -238,13 +238,11 @@ export default function Dashboard() {
                       <button
                         key={meal}
                         onClick={() => toggleMeal(person.id, meal, status)}
-                        className={`flex-1 flex flex-col items-center justify-center gap-1 py-4 rounded-2xl active:scale-95 transition-transform ${STATUS_STYLE[status]}`}
+                        className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-1 rounded-lg active:scale-95 transition-transform ${STATUS_STYLE[status]}`}
                       >
-                        <span className="text-2xl leading-none">{MEAL_ICONS[meal]}</span>
-                        <span className="text-[11px] font-semibold mt-0.5">{MEAL_LABELS[meal]}</span>
-                        <span className={`chip text-[9px] ${done ? 'opacity-70' : 'opacity-30'}`}>
-                          {done ? '✓ done' : 'pending'}
-                        </span>
+                        <span className="text-sm">{MEAL_ICONS[meal]}</span>
+                        <span className="text-xs font-semibold">{MEAL_LABELS[meal]}</span>
+                        {done && <span className="chip text-[9px] opacity-60">✓</span>}
                       </button>
                     )
                   })}
