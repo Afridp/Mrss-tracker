@@ -6,12 +6,11 @@ const MEAL_LABELS = { breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner' }
 const MEAL_ICONS  = { breakfast: '☀', lunch: '◐', dinner: '☾' }
 const MEAL_PRICES = { breakfast: 30, lunch: 60, dinner: 30 }
 
-const STATUS_CYCLE = { pending: 'delivered', delivered: 'skipped', skipped: 'pending' }
+const STATUS_CYCLE = { pending: 'delivered', delivered: 'pending' }
 
 const STATUS_STYLE = {
   pending:   'bg-notion-bg text-notion-subtle border-notion-border hover:bg-notion-hover',
-  delivered: 'bg-notion-text text-notion-bg border-notion-text',
-  skipped:   'bg-notion-hover text-notion-light border-notion-border line-through'
+  delivered: 'bg-notion-text text-notion-bg border-notion-text'
 }
 
 function toDateStr(date) {
@@ -239,7 +238,7 @@ export default function Dashboard() {
                       >
                         <span className="opacity-70">{MEAL_ICONS[meal]}</span>
                         <span className="text-xs">{MEAL_LABELS[meal]}</span>
-                        <span className="chip opacity-80">· {status}</span>
+                        <span className="chip opacity-80">· {status === 'delivered' ? 'Done' : 'Pending'}</span>
                       </button>
                     )
                   })}

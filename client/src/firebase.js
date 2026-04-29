@@ -8,7 +8,8 @@ const firebaseConfig = {
   storageBucket: "mess-2cfc0.firebasestorage.app",
   messagingSenderId: "359562836279",
   appId: "1:359562836279:web:2988de79597814d09602b2"
-}
+};
+ 
 
 const app = initializeApp(firebaseConfig)
 export const db = getFirestore(app)
