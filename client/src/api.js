@@ -29,13 +29,15 @@ export async function addPerson({ name, breakfast, lunch, dinner }) {
   return { id: ref.id, ...data }
 }
 
-export async function updatePerson(id, { name, breakfast, lunch, dinner }) {
-  await updateDoc(doc(db, 'people', id), {
+export async function updatePerson(id, { name, breakfast, lunch, dinner, email }) {
+  const data = {
     name: name.trim(),
     breakfast: breakfast ? 1 : 0,
     lunch:     lunch     ? 1 : 0,
     dinner:    dinner    ? 1 : 0
-  })
+  }
+  if (email !== undefined) data.email = email
+  await updateDoc(doc(db, 'people', id), data)
 }
 
 export async function deletePerson(id) {
