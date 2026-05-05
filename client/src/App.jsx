@@ -84,7 +84,7 @@ function Navbar() {
           </div>
         </div>
       </div>
-      <div className="max-w-2xl mx-auto px-3 pb-2 flex gap-1">
+      <div className="max-w-2xl mx-auto px-3 pb-2 flex gap-1 overflow-x-auto scrollbar-hide">
         <NavLink to="/" className={linkClass}>Today</NavLink>
         {isAdmin && <NavLink to="/people" className={linkClass}>People</NavLink>}
         <NavLink to="/billing" className={linkClass}>Billing</NavLink>

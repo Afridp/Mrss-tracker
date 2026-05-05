@@ -49,6 +49,9 @@ body, button, a, div, span, header, main, input, form {
 
 input:focus, textarea:focus { outline: none; }
 
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+
 @media print {
   .no-print { display: none !important; }
   body { background: white !important; color: black !important; }
