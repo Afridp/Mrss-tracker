@@ -129,18 +129,14 @@ export async function getBilling(month) {
 export async function getReport(fromDate, toDate) {
   const [peopleSnap, logsSnap] = await Promise.all([
     getDocs(peopleCol),
-    getDocs(query(
-      mealsCol,
-      where('date', '>=', fromDate),
-      where('date', '<=', toDate)
-    ))
+    getDocs(query(mealsCol, where('status', '==', 'delivered')))
   ])
   const people = peopleSnap.docs
     .map(d => ({ id: d.id, ...d.data() }))
     .sort((a, b) => a.name.localeCompare(b.name))
   const logs = logsSnap.docs
     .map(d => d.data())
-    .filter(l => l.status === 'delivered')
+    .filter(l => l.date >= fromDate && l.date <= toDate)
 
   return people.map(person => {
     const personLogs = logs.filter(l => l.personId === person.id)

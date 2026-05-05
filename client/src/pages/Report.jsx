@@ -24,14 +24,21 @@ export default function Report() {
   const [data, setData]   = useState(null)
   const [loading, setLoading] = useState(false)
   const [generated, setGenerated] = useState(false)
+  const [error, setError] = useState('')
 
   async function generate() {
     if (!from || !to || from > to) return
     setLoading(true)
-    const result = await getReport(from, to)
-    setData(result)
-    setGenerated(true)
-    setLoading(false)
+    setError('')
+    try {
+      const result = await getReport(from, to)
+      setData(result)
+      setGenerated(true)
+    } catch (e) {
+      setError(e?.message || 'Failed to load report')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const grandMeals  = data?.reduce((s, p) => s + p.totalMeals, 0) ?? 0
@@ -76,6 +83,11 @@ export default function Report() {
           >
             {loading ? 'Loading...' : 'Generate'}
           </button>
+          {error && (
+            <p className="mt-3 text-sm text-notion-subtle border border-notion-border rounded-md px-3 py-2 bg-notion-bgSoft">
+              {error}
+            </p>
+          )}
           {generated && data && (
             <button
               onClick={() => window.print()}
