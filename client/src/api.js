@@ -123,3 +123,34 @@ export async function getBilling(month) {
     return { ...person, counts, total }
   })
 }
+
+// ── Report ───────────────────────────────────────────────────────────
+
+export async function getReport(fromDate, toDate) {
+  const [peopleSnap, logsSnap] = await Promise.all([
+    getDocs(peopleCol),
+    getDocs(query(
+      mealsCol,
+      where('date', '>=', fromDate),
+      where('date', '<=', toDate)
+    ))
+  ])
+  const people = peopleSnap.docs
+    .map(d => ({ id: d.id, ...d.data() }))
+    .sort((a, b) => a.name.localeCompare(b.name))
+  const logs = logsSnap.docs
+    .map(d => d.data())
+    .filter(l => l.status === 'delivered')
+
+  return people.map(person => {
+    const personLogs = logs.filter(l => l.personId === person.id)
+    const counts = { breakfast: 0, lunch: 0, dinner: 0 }
+    let total = 0
+    personLogs.forEach(l => {
+      counts[l.meal] = (counts[l.meal] || 0) + 1
+      total += MEAL_PRICES[l.meal] || 0
+    })
+    const totalMeals = Object.values(counts).reduce((a, b) => a + b, 0)
+    return { ...person, counts, total, totalMeals }
+  })
+}

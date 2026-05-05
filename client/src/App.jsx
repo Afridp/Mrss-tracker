@@ -5,6 +5,7 @@ import People from './pages/People'
 import Billing from './pages/Billing'
 import Login from './pages/Login'
 import SetupProfile from './pages/SetupProfile'
+import Report from './pages/Report'
 import { useProfile } from './ProfileContext'
 import { useAuth } from './AuthContext'
 import { useTheme } from './ThemeContext'
@@ -87,6 +88,7 @@ function Navbar() {
         <NavLink to="/" className={linkClass}>Today</NavLink>
         {isAdmin && <NavLink to="/people" className={linkClass}>People</NavLink>}
         <NavLink to="/billing" className={linkClass}>Billing</NavLink>
+        {isAdmin && <NavLink to="/report" className={linkClass}>Report</NavLink>}
       </div>
     </header>
   )
@@ -119,6 +121,7 @@ export default function App() {
           <Route path="/" element={<Dashboard />} />
           {isAdmin && <Route path="/people" element={<People />} />}
           <Route path="/billing" element={<Billing />} />
+          {isAdmin && <Route path="/report" element={<Report />} />}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </main>

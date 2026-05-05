@@ -49,6 +49,12 @@ body, button, a, div, span, header, main, input, form {
 
 input:focus, textarea:focus { outline: none; }
 
+@media print {
+  .no-print { display: none !important; }
+  body { background: white !important; color: black !important; }
+  .print-area { padding: 0 !important; }
+}
+
 @layer components {
   .label-mono {
     font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
