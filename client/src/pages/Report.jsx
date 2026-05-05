@@ -123,12 +123,12 @@ export default function Report() {
           {/* Summary row */}
           <div className="grid grid-cols-4 gap-0 mb-5 border border-notion-border rounded-md overflow-hidden bg-notion-bg">
             {[
-              { label: 'Breakfast', value: grandB },
-              { label: 'Lunch',     value: grandL },
-              { label: 'Dinner',    value: grandD },
-              { label: 'Total',     value: `₹${grandTotal}` }
+              { label: 'Breakfast', value: grandB,           hide: false },
+              { label: 'Lunch',     value: grandL,           hide: false },
+              { label: 'Dinner',    value: grandD,           hide: false },
+              { label: 'Total',     value: `₹${grandTotal}`, hide: true  }
             ].map((s, i, arr) => (
-              <div key={s.label} className={`px-3 py-3 ${i < arr.length-1 ? 'border-r border-notion-border' : ''}`}>
+              <div key={s.label} className={`px-3 py-3 ${i < arr.length-1 ? 'border-r border-notion-border' : ''} ${s.hide ? 'print:hidden' : ''}`}>
                 <div className="label-mono">{s.label}</div>
                 <div className="stat-value text-lg text-notion-text mt-0.5">{s.value}</div>
               </div>
@@ -143,7 +143,7 @@ export default function Report() {
               <div className="px-3 py-2 text-center"><span className="label-mono">B</span></div>
               <div className="px-3 py-2 text-center"><span className="label-mono">L</span></div>
               <div className="px-3 py-2 text-center"><span className="label-mono">D</span></div>
-              <div className="px-3 py-2 text-right"><span className="label-mono">Amount</span></div>
+              <div className="px-3 py-2 text-right print:hidden"><span className="label-mono">Amount</span></div>
             </div>
 
             {/* Rows */}
@@ -167,7 +167,7 @@ export default function Report() {
                 <div className="px-3 py-2.5 text-center">
                   <span className="stat-value text-sm text-notion-text">{person.counts.dinner || 0}</span>
                 </div>
-                <div className="px-3 py-2.5 text-right">
+                <div className="px-3 py-2.5 text-right print:hidden">
                   <span className="stat-value text-sm text-notion-text">₹{person.total}</span>
                 </div>
               </div>
@@ -187,7 +187,7 @@ export default function Report() {
               <div className="px-3 py-2.5 text-center">
                 <span className="stat-value text-sm font-bold text-notion-text">{grandD}</span>
               </div>
-              <div className="px-3 py-2.5 text-right">
+              <div className="px-3 py-2.5 text-right print:hidden">
                 <span className="stat-value text-sm font-bold text-notion-text">₹{grandTotal}</span>
               </div>
             </div>
