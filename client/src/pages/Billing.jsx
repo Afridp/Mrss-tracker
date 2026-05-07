@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { getBilling } from '../api'
+import { getBilling, MEAL_PRICES } from '../api'
 import { useProfile } from '../ProfileContext'
 
-const MEAL_PRICES = { breakfast: 30, lunch: 60, dinner: 30 }
 const MEAL_ICONS  = { breakfast: '☀', lunch: '◐', dinner: '☾' }
 
 function toMonthStr(date) {

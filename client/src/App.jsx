@@ -6,6 +6,7 @@ import Billing from './pages/Billing'
 import Login from './pages/Login'
 import SetupProfile from './pages/SetupProfile'
 import Report from './pages/Report'
+import Booking from './pages/Booking'
 import { useProfile } from './ProfileContext'
 import { useAuth } from './AuthContext'
 import { useTheme } from './ThemeContext'
@@ -86,6 +87,7 @@ function Navbar() {
       </div>
       <div className="max-w-2xl mx-auto px-3 pb-2 flex gap-1 overflow-x-auto scrollbar-hide">
         <NavLink to="/" className={linkClass}>Today</NavLink>
+        <NavLink to="/book" className={linkClass}>Book</NavLink>
         {isAdmin && <NavLink to="/people" className={linkClass}>People</NavLink>}
         <NavLink to="/billing" className={linkClass}>Billing</NavLink>
         {isAdmin && <NavLink to="/report" className={linkClass}>Report</NavLink>}
@@ -119,6 +121,7 @@ export default function App() {
       <main className="max-w-2xl mx-auto px-4 py-6 pb-20">
         <Routes>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/book" element={<Booking />} />
           {isAdmin && <Route path="/people" element={<People />} />}
           <Route path="/billing" element={<Billing />} />
           {isAdmin && <Route path="/report" element={<Report />} />}

@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { getMeals, updateMeal, bulkUpdateMeals } from '../api'
+import { getMeals, updateMeal, bulkUpdateMeals, MEAL_PRICES } from '../api'
 import { useProfile } from '../ProfileContext'
 import { useAuth } from '../AuthContext'
 
 const MEAL_LABELS = { breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner' }
 const MEAL_ICONS  = { breakfast: '☀', lunch: '◐', dinner: '☾' }
-const MEAL_PRICES = { breakfast: 30, lunch: 60, dinner: 30 }
 
 const STATUS_CYCLE = { pending: 'delivered', delivered: 'pending' }
 

@@ -4,10 +4,11 @@ import {
   query, where, writeBatch
 } from 'firebase/firestore'
 
-const peopleCol = collection(db, 'people')
-const mealsCol  = collection(db, 'mealLogs')
+const peopleCol    = collection(db, 'people')
+const mealsCol     = collection(db, 'mealLogs')
+const bookingsCol  = collection(db, 'mealBookings')
 
-const MEAL_PRICES = { breakfast: 30, lunch: 60, dinner: 30 }
+export const MEAL_PRICES = { breakfast: 35, lunch: 50, dinner: 35 }
 
 // ── People ──────────────────────────────────────────────────────────
 
@@ -149,4 +150,25 @@ export async function getReport(fromDate, toDate) {
     const totalMeals = Object.values(counts).reduce((a, b) => a + b, 0)
     return { ...person, counts, total, totalMeals }
   })
+}
+
+// ── Bookings ─────────────────────────────────────────────────────────
+
+export async function getBookings(date) {
+  const snap = await getDocs(query(bookingsCol, where('date', '==', date)))
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }))
+}
+
+export async function setBooking(personId, date, meal, booked) {
+  const existing = await getDocs(query(
+    bookingsCol,
+    where('personId', '==', personId),
+    where('date', '==', date),
+    where('meal', '==', meal)
+  ))
+  if (!existing.empty) {
+    await updateDoc(existing.docs[0].ref, { booked })
+  } else {
+    await addDoc(bookingsCol, { personId, date, meal, booked })
+  }
 }

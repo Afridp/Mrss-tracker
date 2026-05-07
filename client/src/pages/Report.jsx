@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
-import { getReport } from '../api'
-
-const MEAL_PRICES = { breakfast: 30, lunch: 60, dinner: 30 }
+import { getReport, MEAL_PRICES } from '../api'
 
 function localToday() {
   const d = new Date()
