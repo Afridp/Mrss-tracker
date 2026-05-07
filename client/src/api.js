@@ -1,7 +1,7 @@
 import { db } from './firebase'
 import {
   collection, doc, getDocs, getDoc, addDoc, updateDoc, deleteDoc,
-  query, where, writeBatch
+  setDoc, query, where, writeBatch
 } from 'firebase/firestore'
 
 const peopleCol    = collection(db, 'people')
@@ -74,17 +74,9 @@ export async function getMeals(date) {
 }
 
 async function upsertMealLog(personId, date, meal, status) {
-  const existing = await getDocs(query(
-    mealsCol,
-    where('personId', '==', personId),
-    where('date', '==', date),
-    where('meal', '==', meal)
-  ))
-  if (!existing.empty) {
-    await updateDoc(existing.docs[0].ref, { status })
-  } else {
-    await addDoc(mealsCol, { personId, date, meal, status })
-  }
+  // Deterministic ID prevents duplicate documents entirely
+  const id = `${personId}_${date}_${meal}`
+  await setDoc(doc(mealsCol, id), { personId, date, meal, status })
 }
 
 export async function updateMeal({ personId, date, meal, status }) {
@@ -109,9 +101,15 @@ export async function getBilling(month) {
   const people = peopleSnap.docs
     .map(d => ({ id: d.id, ...d.data() }))
     .sort((a, b) => a.name.localeCompare(b.name))
-  const logs = logsSnap.docs
-    .map(d => d.data())
-    .filter(l => l.date.startsWith(month))
+  const rawLogs = logsSnap.docs.map(d => d.data()).filter(l => l.date.startsWith(month))
+  // Deduplicate: keep only one record per (personId, date, meal)
+  const seen = new Set()
+  const logs = rawLogs.filter(l => {
+    const key = `${l.personId}_${l.date}_${l.meal}`
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
 
   return people.map(person => {
     const personLogs = logs.filter(l => l.personId === person.id)
@@ -135,9 +133,14 @@ export async function getReport(fromDate, toDate) {
   const people = peopleSnap.docs
     .map(d => ({ id: d.id, ...d.data() }))
     .sort((a, b) => a.name.localeCompare(b.name))
-  const logs = logsSnap.docs
-    .map(d => d.data())
-    .filter(l => l.date >= fromDate && l.date <= toDate)
+  const rawLogs2 = logsSnap.docs.map(d => d.data()).filter(l => l.date >= fromDate && l.date <= toDate)
+  const seen2 = new Set()
+  const logs = rawLogs2.filter(l => {
+    const key = `${l.personId}_${l.date}_${l.meal}`
+    if (seen2.has(key)) return false
+    seen2.add(key)
+    return true
+  })
 
   return people.map(person => {
     const personLogs = logs.filter(l => l.personId === person.id)
@@ -160,15 +163,6 @@ export async function getBookings(date) {
 }
 
 export async function setBooking(personId, date, meal, booked) {
-  const existing = await getDocs(query(
-    bookingsCol,
-    where('personId', '==', personId),
-    where('date', '==', date),
-    where('meal', '==', meal)
-  ))
-  if (!existing.empty) {
-    await updateDoc(existing.docs[0].ref, { booked })
-  } else {
-    await addDoc(bookingsCol, { personId, date, meal, booked })
-  }
+  const id = `${personId}_${date}_${meal}_booking`
+  await setDoc(doc(bookingsCol, id), { personId, date, meal, booked })
 }
