@@ -166,3 +166,41 @@ export async function setBooking(personId, date, meal, booked) {
   const id = `${personId}_${date}_${meal}_booking`
   await setDoc(doc(bookingsCol, id), { personId, date, meal, booked })
 }
+
+// ── One-time cleanup ─────────────────────────────────────────────────
+
+export async function cleanupDuplicateMealLogs() {
+  const snap = await getDocs(mealsCol)
+  const all = snap.docs.map(d => ({ docId: d.id, ref: d.ref, ...d.data() }))
+
+  // Group by (personId, date, meal)
+  const groups = {}
+  all.forEach(entry => {
+    const key = `${entry.personId}_${entry.date}_${entry.meal}`
+    if (!groups[key]) groups[key] = []
+    groups[key].push(entry)
+  })
+
+  let fixed = 0
+  const batch = writeBatch(db)
+
+  Object.entries(groups).forEach(([key, docs]) => {
+    // Prefer 'delivered' status if any doc has it
+    const status = docs.some(d => d.status === 'delivered') ? 'delivered' : docs[0].status
+    const { personId, date, meal } = docs[0]
+
+    // Write canonical doc with deterministic ID
+    batch.set(doc(mealsCol, key), { personId, date, meal, status })
+
+    // Delete all docs whose ID doesn't match the canonical ID
+    docs.forEach(d => {
+      if (d.docId !== key) {
+        batch.delete(d.ref)
+        fixed++
+      }
+    })
+  })
+
+  await batch.commit()
+  return fixed
+}

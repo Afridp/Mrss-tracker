@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { getPeople, addPerson, updatePerson, deletePerson } from '../api'
+import { getPeople, addPerson, updatePerson, deletePerson, cleanupDuplicateMealLogs } from '../api'
 import { useProfile } from '../ProfileContext'
 
 const PLAN_LABELS = { breakfast: 'B', lunch: 'L', dinner: 'D' }
@@ -156,6 +156,17 @@ export default function People() {
     setDeleteConfirm(null)
   }
 
+  const [cleaning, setCleaning]     = useState(false)
+  const [cleanResult, setCleanResult] = useState(null)
+
+  async function handleCleanup() {
+    setCleaning(true)
+    setCleanResult(null)
+    const fixed = await cleanupDuplicateMealLogs()
+    setCleanResult(fixed)
+    setCleaning(false)
+  }
+
   if (loading) return <div className="text-center py-12 text-notion-light text-sm">Loading...</div>
 
   return (
@@ -271,6 +282,33 @@ export default function People() {
           })}
         </div>
       )}
+
+      {/* Admin data repair */}
+      <div className="mt-8 pt-6 border-t border-notion-border">
+        <div className="label-mono mb-2">Admin tools</div>
+        <div className="bg-notion-bg border border-notion-border rounded-md px-4 py-3 flex items-center justify-between">
+          <div>
+            <div className="text-sm font-medium text-notion-text">Fix duplicate billing data</div>
+            <div className="text-xs text-notion-subtle mt-0.5">
+              Removes duplicate meal records that caused wrong totals. Safe to run anytime.
+            </div>
+          </div>
+          <button
+            onClick={handleCleanup}
+            disabled={cleaning}
+            className="shrink-0 ml-4 px-3 py-1.5 bg-notion-text text-notion-bg rounded-md text-xs font-semibold hover:opacity-90 disabled:opacity-50"
+          >
+            {cleaning ? 'Fixing...' : 'Run fix'}
+          </button>
+        </div>
+        {cleanResult !== null && (
+          <div className="mt-2 text-xs text-notion-subtle text-center">
+            {cleanResult === 0
+              ? '✓ No duplicates found — data is already clean.'
+              : `✓ Fixed ${cleanResult} duplicate record${cleanResult > 1 ? 's' : ''}. Billing is now correct.`}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
