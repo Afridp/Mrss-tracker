@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { getMeals, updateMeal, bulkUpdateMeals, MEAL_PRICES } from '../api'
+import { getMeals, updateMeal, bulkUpdateMeals, autoMarkDeliveredFromBookings, MEAL_PRICES } from '../api'
 import { useProfile } from '../ProfileContext'
 import { useAuth } from '../AuthContext'
 
@@ -23,6 +23,16 @@ function toDateStr(date) {
 function parseDateStr(str) {
   const [y, m, d] = str.split('-').map(Number)
   return new Date(y, m - 1, d)
+}
+
+// Date is "settled" if past, or today after 10 PM — auto-feed should run.
+function isDateSettled(dateStr) {
+  const now = new Date()
+  const today = new Date(); today.setHours(0, 0, 0, 0)
+  const target = parseDateStr(dateStr)
+  if (target < today) return true
+  if (target.getTime() === today.getTime()) return now.getHours() >= 22
+  return false
 }
 
 function formatDisplay(dateStr) {
@@ -56,6 +66,14 @@ export default function Dashboard() {
   }, [dateStr])
 
   useEffect(() => { load() }, [load])
+
+  // Auto-feed booked meals → delivered for settled days
+  useEffect(() => {
+    if (!isDateSettled(dateStr)) return
+    autoMarkDeliveredFromBookings(dateStr).then(count => {
+      if (count > 0) load()
+    }).catch(() => {})
+  }, [dateStr, load])
 
   function shiftDate(days) {
     const d = parseDateStr(dateStr)

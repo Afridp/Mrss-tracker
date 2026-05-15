@@ -167,6 +167,35 @@ export async function setBooking(personId, date, meal, booked) {
   await setDoc(doc(bookingsCol, id), { personId, date, meal, booked })
 }
 
+// Auto-feed bookings → meal logs as 'delivered' for a settled day.
+// Only creates logs that don't already exist — manual toggles are preserved.
+export async function autoMarkDeliveredFromBookings(date) {
+  const [bookingsSnap, logsSnap] = await Promise.all([
+    getDocs(query(bookingsCol, where('date', '==', date))),
+    getDocs(query(mealsCol, where('date', '==', date)))
+  ])
+
+  const bookedItems = bookingsSnap.docs.map(d => d.data()).filter(b => b.booked)
+  const existing = new Set()
+  logsSnap.docs.forEach(d => {
+    const data = d.data()
+    existing.add(`${data.personId}_${data.meal}`)
+  })
+
+  const toCreate = bookedItems.filter(b => !existing.has(`${b.personId}_${b.meal}`))
+  if (toCreate.length === 0) return 0
+
+  const batch = writeBatch(db)
+  toCreate.forEach(b => {
+    const id = `${b.personId}_${b.date}_${b.meal}`
+    batch.set(doc(mealsCol, id), {
+      personId: b.personId, date: b.date, meal: b.meal, status: 'delivered'
+    })
+  })
+  await batch.commit()
+  return toCreate.length
+}
+
 // ── One-time cleanup ─────────────────────────────────────────────────
 
 export async function cleanupDuplicateMealLogs() {
